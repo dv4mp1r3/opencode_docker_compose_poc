@@ -1,0 +1,155 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "gpt-oss:20b",
+  "small_model": "gpt-oss:20b",
+  "default_agent": "auto",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama",
+      "options": {
+        //"baseURL": "http://host.docker.internal:11434/v1",
+        "baseURL": "http://ollama:11434/v1",
+        "apiKey": "ollama"
+      },
+      "models": {
+        "qwen2.5-coder:14b": {
+          "name": "qwen2.5-coder:14b",
+          "tools": true,
+          "limit": {
+            "context": 32768,
+            "output": 8192
+          }
+        },
+        "gpt-oss:20b": {
+          "name": "gpt-oss:20b",
+          "tools": true,
+          "options": {
+            "extraBody": {
+              "think": "high"
+            }
+          },
+          "limit": {
+            "context": 32768,
+            "output": 8192
+          }
+        },
+        "ImpurestClub/qwen3.5-27B-claude-4.6-opus-reasoning-distilled-v2-q3km": {
+          "name": "ImpurestClub/qwen3.5-27B-claude-4.6-opus-reasoning-distilled-v2-q3km",
+          "limit": {
+            "context": 32768,
+            "output": 8192
+          }
+        }
+      }
+    }
+  },
+  "disabled_providers": [
+    "opencode",
+    "opencode-zen",
+    "anthropic",
+    "copilot",
+    "openai"
+  ],
+  "enabled_providers": [
+    "ollama"
+  ],
+  "share": "disabled",
+  "autoupdate": false,
+  "permission": {
+    "read": "allow",
+    "edit": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "list": "allow",
+    "lsp": "allow",
+    "todoread": "allow",
+    "todowrite": "allow",
+    "task": "allow",
+    "skill": "allow",
+    "question": "allow",
+    "bash": {
+      "pwd": "allow",
+      "echo *": "allow",
+      "ls *": "allow",
+      "cd *": "allow",
+      "type *": "allow",
+      "which *": "allow",
+      "file *": "allow",
+      "cat *": "allow",
+      "*": "ask",
+      "git *": "ask",
+      "npm *": "ask",
+      "bun *": "ask",
+      "node *": "ask",
+      "tsc *": "ask",
+      "npx *": "ask"
+    },
+    "webfetch": "ask",
+    "websearch": "ask",
+    "memory_list": "allow",
+    "memory_set": "allow",
+    "memory_replace": "allow",
+    "doom_loop": "ask",
+    "external_directory": "ask"
+  },
+  "watcher": {
+    "ignore": [
+      "node_modules/**",
+      ".git/**",
+      "dist/**",
+      "build/**",
+      "**/*.exe",
+      "**/*.dll"
+    ]
+  },
+  "experimental": {
+    "chatMaxRetries": 5
+  },
+  "agent": {
+    "title": {
+      "model": "gpt-oss:20b"
+    },
+    "auto": {
+      "mode": "primary",
+      "prompt": "{file:~/.config/opencode/agent_prompt.txt}",
+      "permission": {
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "lsp": "allow",
+        "todoread": "allow",
+        "todowrite": "allow",
+        "task": "deny",
+        "skill": "allow",
+        "question": "allow",
+        "bash": {
+          "*": "ask",
+          "git *": "allow",
+          "npm *": "allow",
+          "bun *": "allow",
+          "node *": "allow",
+          "tsc *": "allow",
+          "npx *": "allow",
+          "type *": "allow",
+          "where *": "allow",
+          "dir *": "allow",
+          "echo *": "allow",
+          "cat *": "allow",
+          "ls *": "allow",
+          "pwd": "allow",
+          "cd *": "allow"
+        },
+        "webfetch": "ask",
+        "websearch": "ask",
+        "memory_list": "allow",
+        "memory_set": "allow",
+        "memory_replace": "allow",
+        "doom_loop": "ask",
+        "external_directory": "ask"
+      }
+    }
+  }
+}

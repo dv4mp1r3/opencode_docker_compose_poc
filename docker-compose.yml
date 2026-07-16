@@ -1,0 +1,63 @@
+services:
+  ollama-init:
+    image: alpine
+    command: chown -R "${UID:-1000}:${GID:-1000}" /ollama
+    volumes:
+      - ollama-models:/ollama
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ollama-models:/ollama
+    environment:
+      OLLAMA_MODELS: /ollama
+      OLLAMA_CONTEXT_LENGTH: 32768
+      OLLAMA_KEEP_ALIVE: 30m
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    networks:
+      - llm-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:11434/api/tags || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+    depends_on:
+      ollama-init:
+        condition: service_completed_successfully
+
+  opencode:
+    build:
+      context: .
+      args:
+        UID: "${UID:-1000}"
+        GID: "${GID:-1000}"
+    container_name: opencode
+    volumes:
+      - ${WORKSPACE_PATH:-./workspace}:/workspace
+      - ./config/opencode.jsonc:/home/node/.config/opencode/opencode.jsonc:ro
+      - ./config/delegation.ts:/home/node/.config/opencode/delegation.ts:ro
+      - ./config/agent_prompt.txt:/home/node/.config/opencode/agent_prompt.txt:ro
+    working_dir: /workspace
+    environment:
+      OPENCODE_MODEL: ${OPENCODE_MODEL:-gpt-oss:20b}
+      OPENCODE_BASE_URL: http://${OLLAMA_HOST:-ollama}:11434/v1
+      HTTP_PROXY: ${HTTP_PROXY:-}
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+      NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,host.docker.internal,ollama}
+    networks:
+      - llm-net
+    tty: true
+    stdin_open: true
+    restart: "no"
+
+networks:
+  llm-net:
+    driver: bridge
+
+volumes:
+  ollama-models:
