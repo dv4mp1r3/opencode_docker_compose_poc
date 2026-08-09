@@ -40,8 +40,9 @@ services:
     volumes:
       - ${WORKSPACE_PATH:-./workspace}:/workspace
       - ./config/opencode.jsonc:/home/node/.config/opencode/opencode.jsonc:ro
-      - ./config/delegation.ts:/home/node/.config/opencode/delegation.ts:ro
       - ./config/agent_prompt.txt:/home/node/.config/opencode/agent_prompt.txt:ro
+      - ./config/scout_prompt.txt:/home/node/.config/opencode/scout_prompt.txt:ro
+      - ./logs/opencode:/home/node/.local/share/opencode/log
     working_dir: /workspace
     environment:
       OPENCODE_MODEL: ${OPENCODE_MODEL:-gpt-oss:20b}

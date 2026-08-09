@@ -1,21 +1,21 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "gpt-oss:20b",
-  "small_model": "gpt-oss:20b",
+  "model": "ollama/gpt-oss:20b",
+  "small_model": "ollama/gpt-oss:20b",
   "default_agent": "auto",
   "provider": {
     "ollama": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "Ollama",
       "options": {
-        //"baseURL": "http://host.docker.internal:11434/v1",
-        "baseURL": "http://ollama:11434/v1",
+        "baseURL": "http://host.docker.internal:11434/v1",
+        //"baseURL": "http://ollama:11434/v1",
         "apiKey": "ollama"
       },
       "models": {
         "qwen2.5-coder:14b": {
           "name": "qwen2.5-coder:14b",
-          "tools": true,
+          "tools": false,
           "limit": {
             "context": 32768,
             "output": 8192
@@ -108,7 +108,7 @@
   },
   "agent": {
     "title": {
-      "model": "gpt-oss:20b"
+      "model": "ollama/gpt-oss:20b"
     },
     "auto": {
       "mode": "primary",
@@ -122,12 +122,12 @@
         "lsp": "allow",
         "todoread": "allow",
         "todowrite": "allow",
-        "task": "deny",
+        "task": "allow",
         "skill": "allow",
         "question": "allow",
         "bash": {
           "*": "ask",
-          "git *": "allow",
+          "git *": "ask",
           "npm *": "allow",
           "bun *": "allow",
           "node *": "allow",
@@ -149,6 +149,33 @@
         "memory_replace": "allow",
         "doom_loop": "ask",
         "external_directory": "ask"
+      }
+    },
+    "scout": {
+      "mode": "subagent",
+      "model": "ollama/gpt-oss:20b",
+      "prompt": "{file:~/.config/opencode/scout_prompt.txt}",
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "lsp": "allow",
+        "edit": "deny",
+        "write": "deny",
+        "bash": "deny",
+        "task": "deny",
+        "todoread": "allow",
+        "todowrite": "deny",
+        "skill": "deny",
+        "question": "deny",
+        "webfetch": "deny",
+        "websearch": "deny",
+        "memory_list": "allow",
+        "memory_set": "deny",
+        "memory_replace": "deny",
+        "doom_loop": "deny",
+        "external_directory": "deny"
       }
     }
   }

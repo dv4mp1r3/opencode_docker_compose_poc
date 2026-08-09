@@ -3,7 +3,10 @@ FROM node:22-slim
 ARG UID=1000
 ARG GID=1000
 
-RUN npm install -g opencode-ai @opencode-ai/plugin && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git ca-certificates ripgrep && \
+    rm -rf /var/lib/apt/lists/* && \
+    npm install -g opencode-ai && \
     groupmod -g "${GID}" node && \
     usermod -u "${UID}" -g "${GID}" node && \
     mkdir -p /workspace && chown node:node /workspace
