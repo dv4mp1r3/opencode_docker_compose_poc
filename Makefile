@@ -58,13 +58,13 @@ check-proxy:
 
 log:
 	@case "$(word 2,$(MAKECMDGOALS))" in \
-		list) docker compose exec opencode opencode session list ;; \
+		list) docker compose exec -T -e PAGER=cat opencode opencode session list ;; \
 		get) \
 			if [ -z "$(word 3,$(MAKECMDGOALS))" ]; then \
 				echo "Использование: make log get <sessionID>"; \
 				exit 1; \
 			fi; \
-			docker compose exec opencode opencode export $(word 3,$(MAKECMDGOALS)) ;; \
+			docker compose exec -T -e PAGER=cat opencode opencode export $(word 3,$(MAKECMDGOALS)) ;; \
 		*) echo "Использование: make log list | make log get <sessionID>" ;; \
 	esac
 
