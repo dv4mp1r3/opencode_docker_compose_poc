@@ -49,7 +49,7 @@ services:
     working_dir: /workspace
     environment:
       OPENCODE_MODEL: ${OPENCODE_MODEL:-gpt-oss:20b}
-      OPENCODE_BASE_URL: http://${OLLAMA_HOST:-ollama}:11434/v1
+      OLLAMA_HOST: ${OLLAMA_HOST:-ollama}
       HTTP_PROXY: ${HTTP_PROXY:-}
       HTTPS_PROXY: ${HTTPS_PROXY:-}
       NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,host.docker.internal,ollama}

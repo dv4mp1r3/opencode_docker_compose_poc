@@ -45,6 +45,10 @@ list:
 	docker compose exec ollama ollama list
 
 code:
+	@if [ -z "$$(docker compose ps -q opencode --status running 2>/dev/null)" ]; then \
+		echo "Контейнер opencode не запущен — запускаю..."; \
+		docker compose up -d opencode; \
+	fi
 	docker compose exec -it opencode opencode
 
 shell:

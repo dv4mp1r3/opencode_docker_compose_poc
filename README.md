@@ -72,10 +72,11 @@ Ollama в Docker на Mac работает **без GPU** (Metal недосту�
 
 ```
 # Указать на нативный Ollama вместо контейнера
-OPENCODE_BASE_URL=http://host.docker.internal:11434/v1
+OLLAMA_HOST=host.docker.internal
 ```
 
-И убери сервис `ollama` из `docker-compose.yml`.
+Сервис `ollama` из `docker-compose.yml` в этом случае не нужен — можно просто не поднимать
+его (`docker compose up -d opencode`).
 
 ## Прокси
 
