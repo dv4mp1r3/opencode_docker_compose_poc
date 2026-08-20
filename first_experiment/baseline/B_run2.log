@@ -1,0 +1,39 @@
+We added a type field to Request but we also need method and body. For POST we need reading body. Also need Post registration.
+
+Let's read example.cpp already using only Get? We don't have echo handler. We'll modify example.cpp to add Post('/echo', ...). So modifications: In httplib.h add support: new struct fields in Request: string method; string body; size_t content_length? For convenience just method and body. And Post method in Server class similar to Get but separate? Actually same handlers mapping uses path as key only; to differentiate methods, we need a map keyed by pair or maybe store handler with path+method.
+
+Simplest: Add new member variable handlers_by_method_ as unordered_map<string, handler_type> where key "GET:/path" etc. Then in listen when method matches, use that. But easier modify Request and server to consider method; keep single mapping but on lookup choose based on method. We can store two maps: one for get handler and one for post. For simplicity add functions Get() and Post() both adding to map but differentiate by key (e.g., path+"_GET"). Actually we can adjust handlers_ to have keys like "GET:/foo". So change handlers_ accordingly. In Get, use key ="GET:"+path. In Post same with POST:.
+
+Also need body reading: after request parsed loop until find \r\n\r\n; bytes remaining are body? The loop stops when header ended but may continue reading rest of data. We can read the rest into a string body. Actually recv continues until no more data (or read returns 0). But we could get body already appended earlier to 'request'; after breaking at headers, there might be extra part. So modify: After break, separate headers/body; parse content-length? For echo just return entire body raw, even for empty bodies.
+
+Simpler: treat request variable as whole bytes; we can find end of header index = request.find("\r\n\r\n") + 4; then body = request.substr(end); assign to req.body. Also set method string, etc.
+
+Thus modify Request struct to have method and body.
+
+Modify listen for handler selection using path method. Add function Post similar to Get.
+
+Implement modifications accordingly.
+
+Let's edit httplib.h: add struct members method, content_length? not needed. Update constructor usage req{path}? Now we need to construct with both. We'll change initialization later: Request req{path}; need to supply both; we can set after parsing: Request req; req.path=path; req.method=method; req.body=body;
+
+Let's edit.
+## Обзор
+Добавили поддержку HTTP‑метода **POST** в `httplib.h`, обновили диспетчеризацию по пути и методу, а также реализовали `/echo`-хендлер в `example.cpp`, который возвращает тело POST‑запроса.
+
+## Затрагиваемые файлы
+- `httplib.h` – добавлены поля `method` и `body`, расширена логика регистрации/выборки обработчиков, реализована чтение тела запроса.
+- `example.cpp` – добавлен POST‑хендлер `/echo`.
+
+## Микрозадачи
+
+### 1. Пришлем обновления в httplib.h
+- Добавить поля `method` и `body` в структуру Request.
+- В методах `Get` и `Post` хранить обработчики с ключами `"GET:<path>"` и `"POST:<path>"`.
+- В основном цикле `listen()` сформировать ключ из метода и пути, искать соответствующий handler.
+- Сформировать заполненный объект `Request`: `path`, `method`, `body`. Тело берётся после заголовков.
+
+### 2. Добавим echo‑хендлер в example.cpp
+- После существующего Get‑обработчика вызвать `svr.Post("/echo", ...)`.
+- Хендлер просто устанавливает тело ответа равным `req.body` и статус 200.
+
+Данные изменения добавят поддержку POST‑метода и демонстрационный `/echo` эндпоинт.

@@ -3,6 +3,7 @@
   "model": "ollama/gpt-oss:20b",
   "small_model": "ollama/gpt-oss:20b",
   "default_agent": "auto",
+  "plugin": ["/home/node/.config/opencode/no_diff_markers_plugin.js", "/home/node/.config/opencode/verify_gate_plugin.js"],
   "provider": {
     "ollama": {
       "npm": "@ai-sdk/openai-compatible",
@@ -137,6 +138,14 @@
           "g++ *": "allow",
           "make *": "allow",
           "python3 *": "allow",
+          "python *": "allow",
+          "sleep *": "allow",
+          "pkill *": "allow",
+          "kill *": "allow",
+          "curl *": "allow",
+          "true": "allow",
+          "false": "allow",
+          "./*": "allow",
           "type *": "allow",
           "where *": "allow",
           "dir *": "allow",
@@ -152,7 +161,7 @@
         "memory_set": "allow",
         "memory_replace": "allow",
         "doom_loop": "ask",
-        "external_directory": "ask"
+        "external_directory": "allow"
       }
     },
     "scout": {

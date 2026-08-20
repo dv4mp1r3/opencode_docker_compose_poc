@@ -1,0 +1,151 @@
+We need to modify example.cpp such that GET "/" reads query param name from /hello?name=Ivan and respond with name substituted, but keep httplib.h unchanged. Wait requirement: "Добавь чтение query-параметра name из /hello?name=Ivan и подставь его в ответ, не меняя httplib.h." So we need to modify example.cpp (only). We must read query param from request path? In our simplistic server, Request struct only has 'path', not query. Query string lost. To parse GET path for query parameters: Path "/hello?name=Ivan" etc.
+
+We can extract from req.path which contains full request path including query? In Request struct earlier set to path from URL path part; in server code lines 108-109 they read line "method >> path". That uses entire path string including maybe "?query". So req.path may have "/hello?name=Ivan". Our handler at "/" only receives root, it triggers for any incoming path with default_handler. It currently extracts sub from req.path.substr(1); so if request is /hello?name=Ivan, sub becomes "hello?name=Ivan". That's fine for file serving; but we want to read query param to output.
+
+We add logic in handler: parse name= value from query string after '?' part. Then use it to set response body like "Hello Ivan"? It says "подставь его в ответ" meaning embed. Probably send greeting. We just need to modify example.cpp accordingly.
+
+Define function to parse query string: find '?' index; if found, get substring after '?', split by '&', then find param equal. We'll implement simple.
+
+Thus change handler lambda to extract name and use in response body instead of file content. If not defined maybe default "World" or fallback? Not specified. Probably just replace 'Hello World' etc? Let's output "Hello <name>" for /hello? Or return "Hello Ivan". Implementation: if path starts with "/hello", parse; else keep default.
+
+Modify code lines 27-54 accordingly.
+
+Let's prepare edit.
+
+We need to open file example.cpp. We'll do read first. Already have content. We'll modify.
+
+Implement at lines 27 onwards:
+
+Change: svr.Get("/", [&](...), but maybe want new route for "/hello". Our requirement reading from /hello?name=Ivan. We can keep existing Get("/") and inside check req.path. If path starts with "/hello", parse query param, set res.set_content("Hello " + name...). Else current logic.
+
+So modify.
+
+Let's use edit tool: replace whole handler lambda block lines 27-54. We'll provide new content.
+
+We'll need to ensure we refer to string manipulations. Let's propose code:
+
+svr.Get("/", [&](const httplib::Request& req, httplib::Response& res) {
+    // if request path starts with "/hello" parse query param
+    if (req.path.rfind("/hello",0)==0) { // starts with /hello
+        std::string name = "world";
+        auto pos_q= req.path.find('?');
+        if (pos_q!=std::string::npos) {
+            std::string qs = req.path.substr(pos_q+1);
+            size_t pos_eq = qs.find('=');
+            if (pos_eq!=std::string::npos) {
+                name = qs.substr(pos_eq+1);
+                // optionally URL-decode? simple
+            }
+        }
+        std::string greeting = "Hello " + name;
+        res.set_content(greeting, "text/plain");
+        return;
+    }
+    // Existing file serving logic...
+}
+
+But we need to keep the rest. So implement this inside.
+
+Implement editing: replace lines 27-54 with new block accordingly.
+
+Let's compose new content:
+
+```
+svr.Get("/", [&](const httplib::Request& req, httplib::Response& res) {
+        // if requesting /hello?name=Ivan
+        if (req.path.rfind("/hello",0)==0) {
+            std::string name = "world";
+            auto pos_q = req.path.find('?');
+            if (pos_q != std::string::npos) {
+                std::string qs = req.path.substr(pos_q + 1);
+                size_t pos_eq = qs.find('=');
+                if (pos_eq != std::string::npos) {
+                    name = qs.substr(pos_eq + 1);
+                }
+            }
+            std::string greeting = "Hello " + name;
+            res.set_content(greeting, "text/plain");
+            return;
+        }
+
+        // Resolve file path relative to root directory
+        std::filesystem::path p = root.empty() ? std::filesystem::current_path() : std::filesystem::path(root);
+        std::string sub = req.path.substr(1); // remove leading '/'
+        if (sub.empty()) sub = "index.html";
+        p /= sub;
+
+        if (std::filesystem::exists(p) && std::filesystem::is_regular_file(p)) {
+            std::ifstream file(p, std::ios::binary | std::ios::ate);
+            if (file) {
+                std::streamsize size = file.tellg();
+                file.seekg(0, std::ios::beg);
+                std::string buffer(size, '\0');
+                file.read(&buffer[0], size);
+                res.set_content(buffer, "text/plain");
+                res.status = 200;
+            } else {
+                res.status = 500;
+                res.set_content("Cannot read file", "text/plain");
+            }
+        } else {
+            // Directory listing if target is not a file
+            std::string dirs;
+            for (const auto &entry : std::filesystem::directory_iterator(p.parent_path())) {
+                dirs += entry.path().filename().string() + "\n";
+            }
+            res.set_content("<html><body><h1>Directory listing</h1>\n<pre>" + dirs + "</pre></body></html>", "text/html");
+        }
+
+    });
+```
+
+We must keep rest of code. We'll use edit with replaceAll? only one occurrence of handler block.
+
+Let's locate exact lines for replace. We'll output old string snippet from read: lines 27-54 block starting with `svr.Get("/", ...)` to closing `});`. We'll replace entire block up to line 55? Actually ends at 56 or 57? In original, after handler code block there's a line 56 `});` ; that's part of block. After that comes line 58, etc.
+
+So oldString: from "svr.Get(\"/,\"[..." until the closing `});` line (line 56). Let's capture exactly.
+
+We can use regex but easier to copy manually: we need full string including newlines exactly as in file except maybe trailing spaces. Provide that oldString to replace. Then provide newString.
+
+Let's read lines 27-56 from read output for accuracy:
+
+Lines 27-56 reading earlier:
+
+27:     svr.Get("/", [&](const httplib::Request& req, httplib::Response& res) {
+28:         // Resolve file path relative to root directory
+29:         std::filesystem::path p = root.empty() ? std::filesystem::current_path() : std::filesystem::path(root);
+30:         std::string sub = req.path.substr(1); // remove leading '/'
+31:         if (sub.empty()) sub = "index.html";
+32:         p /= sub;
+33: 
+34:         if (std::filesystem::exists(p) && std::filesystem::is_regular_file(p)) {
+35:             std::ifstream file(p, std::ios::binary | std::ios::ate);
+36:             if (file) {
+37:                 std::streamsize size = file.tellg();
+38:                 file.seekg(0, std::ios::beg);
+39:                 std::string buffer(size, '\0');
+40:                 file.read(&buffer[0], size);
+41:                 res.set_content(buffer, "text/plain");
+42:                 res.status = 200;
+43:             } else {
+44:                 res.status = 500;
+45:                 res.set_content("Cannot read file", "text/plain");
+46:             }
+47:         } else {
+48:             // Directory listing if target is not a file
+49:             std::string dirs;
+50:             for (const auto &entry : std::filesystem::directory_iterator(p.parent_path())) {
+51:                 dirs += entry.path().filename().string() + "\n";
+52:             }
+53:             res.set_content("<html><body><h1>Directory listing</h1>\n<pre>" + dirs + "</pre></body></html>", "text/html");
+54:         }
+55: 
+56:     });
+
+So oldString would be from line 27 to line 56 inclusive including all indent spaces. We'll replicate.
+
+Now newString from earlier block lines. Ensure indent similar first two characters spaces? Original had four spaces before svr.Get etc? It's actually at indentation level of 4 spaces? In file, each line seems indented by one tab maybe? It has 4 spaces before "svr." So maintain same leading spaces. We'll do that.
+
+Let's compose newString accordingly.
+
+Now perform edit with replaceAll=false default.

@@ -11,6 +11,7 @@ RUN apt-get update && \
         python3 python3-pyflakes \
         curl && \
     rm -rf /var/lib/apt/lists/* && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
     npm install -g opencode-ai && \
     groupmod -g "${GID}" node && \
     usermod -u "${UID}" -g "${GID}" node && \

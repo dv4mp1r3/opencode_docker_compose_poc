@@ -1,0 +1,28 @@
+Need relative from repo root; path is workspace/example.cpp? Listing shows /workspace/example.cpp. We'll read that.
+We need precise match for oldString; easier: replace whole block from line46-50 with new code. We'll use edit replacing including those lines as old string exact. Let's copy old block exactly lines 46-50. We'll craft oldString matching including indentation and newline characters? In tool, we provide the string as plain text without line numbers, but must match whitespace.
+
+Let's create oldString:
+
+"
+        // Resolve file path relative to root directory
+        std::filesystem::path p = root.empty() ? std::filesystem::current_path() : std::filesystem::path(root);
+        std::string sub = req.path.substr(1); // remove leading '/'
+        if (sub.empty()) sub = \"index.html\";
+        p /= sub;
+"
+
+Need to ensure newline at end? but tool may match. We'll create edit accordingly and add newString with same indentation.
+
+New block:
+
+"
+        // Resolve file path relative to root directory, ignoring query string
+        size_t qp_pos = req.path.find('?');
+        std::string clean_path = qp_pos == std::string::npos ? req.path : req.path.substr(0, qp_pos);
+        std::filesystem::path p = root.empty() ? std::filesystem::current_path() : std::filesystem::path(root);
+        std::string sub = clean_path.substr(1); // remove leading '/'
+        if (sub.empty()) sub = \"index.html\";
+        p /= sub;
+"
+
+Let's perform edit.

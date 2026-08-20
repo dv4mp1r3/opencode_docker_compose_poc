@@ -1,0 +1,1 @@
+The user wants to add reading query parameter name from /hello?name=Ivan and insert into response, not changing httplib.h. That means we need to modify example.cpp or other server logic that uses httplib. Example.cpp likely sets up a server GET handler for "/". Let's inspect.

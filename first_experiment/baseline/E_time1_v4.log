@@ -1,0 +1,33 @@
+timestamp=2026-08-10T14:22:42.701Z level=INFO run=78cc2321 message="creating instance" directory=/workspace
+timestamp=2026-08-10T14:22:42.702Z level=INFO run=78cc2321 message=fromDirectory directory=/workspace
+timestamp=2026-08-10T14:22:42.714Z level=INFO run=78cc2321 message=bootstrapping directory=/workspace
+timestamp=2026-08-10T14:22:42.725Z level=INFO run=78cc2321 message=loading path=/home/node/.config/opencode/config.json
+timestamp=2026-08-10T14:22:42.726Z level=INFO run=78cc2321 message=loading path=/home/node/.config/opencode/opencode.json
+timestamp=2026-08-10T14:22:42.726Z level=INFO run=78cc2321 message=loading path=/home/node/.config/opencode/opencode.jsonc
+timestamp=2026-08-10T14:22:42.774Z level=INFO run=78cc2321 message="all LSPs are disabled"
+timestamp=2026-08-10T14:22:42.774Z level=INFO run=78cc2321 message="all formatters are disabled"
+timestamp=2026-08-10T14:22:42.774Z level=INFO run=78cc2321 message=init
+timestamp=2026-08-10T14:22:42.871Z level=INFO run=78cc2321 message=created id=ses_013f21548ffeb89pcXVkjV6A6x slug=nimble-canyon version=1.18.15 projectID=global directory=/workspace path=workspace workspaceID=undefined parentID=undefined title="New session - 2026-08-10T14:22:42.871Z" agent=undefined model=undefined metadata=undefined permission="[{\"permission\":\"question\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_enter\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_exit\",\"pattern\":\"*\",\"action\":\"deny\"}]" cost=0 tokens.input=0 tokens.output=0 tokens.reasoning=0 tokens.cache.read=0 tokens.cache.write=0 time.created=1786371762871 time.updated=1786371762871
+timestamp=2026-08-10T14:22:42.892Z level=INFO run=78cc2321 message="event connected"
+timestamp=2026-08-10T14:22:43.138Z level=INFO run=78cc2321 message=loop session.id=ses_013f21548ffeb89pcXVkjV6A6x step=0
+timestamp=2026-08-10T14:22:43.144Z level=INFO run=78cc2321 message="shell tool using shell" shell=/usr/bin/bash
+timestamp=2026-08-10T14:22:43.148Z level=INFO run=78cc2321 message=init count=1
+[0m
+> auto · gpt-oss:20b
+[0m
+timestamp=2026-08-10T14:22:43.163Z level=INFO run=78cc2321 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013f21548ffeb89pcXVkjV6A6x small=true agent=title mode=primary
+timestamp=2026-08-10T14:22:43.167Z level=INFO run=78cc2321 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T14:22:43.223Z level=INFO run=78cc2321 message="watcher backend" directory=/workspace platform=linux backend=inotify
+timestamp=2026-08-10T14:22:43.227Z level=INFO run=78cc2321 message="project copy refresh started" projectID=global
+timestamp=2026-08-10T14:22:43.228Z level=INFO run=78cc2321 message="project copy refresh done" projectID=global updated=[] removed=[]
+timestamp=2026-08-10T14:22:43.243Z level=INFO run=78cc2321 message="booting location services" directory=/workspace workspaceID=undefined
+timestamp=2026-08-10T14:22:43.360Z level=INFO run=78cc2321 message=process session.id=ses_013f21548ffeb89pcXVkjV6A6x messageID=msg_fec0debc30016q2AHepzZh1Gaa
+timestamp=2026-08-10T14:22:43.369Z level=INFO run=78cc2321 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013f21548ffeb89pcXVkjV6A6x small=false agent=auto mode=primary
+timestamp=2026-08-10T14:22:43.370Z level=INFO run=78cc2321 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T14:22:43.477Z level=ERROR run=78cc2321 message="Failed to fetch models.dev" cause="Cause([Fail(HttpClientError: Transport error (GET https://models.opencode.ai/api.json) (cause: Error: Unable to connect. Is the computer able to access the url?))])"
+timestamp=2026-08-10T14:23:23.733Z level=INFO run=78cc2321 message=loop session.id=ses_013f21548ffeb89pcXVkjV6A6x step=1
+timestamp=2026-08-10T14:23:23.735Z level=INFO run=78cc2321 message="exiting loop" session.id=ses_013f21548ffeb89pcXVkjV6A6x
+timestamp=2026-08-10T14:23:23.741Z level=INFO run=78cc2321 message="disposing instance" directory=/workspace
+real 41.84
+user 0.01
+sys 0.00

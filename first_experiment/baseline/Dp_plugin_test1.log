@@ -1,0 +1,1 @@
+We added field pending_rename_src but didn't add commands RNFR/RNTO and handling. Let's inspect rest of file for _resolve_path etc already there. Need to implement do_RNFR and do_RNTO. Search if any references.

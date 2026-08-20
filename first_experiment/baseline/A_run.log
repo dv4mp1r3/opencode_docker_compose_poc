@@ -1,0 +1,25 @@
+Флаг `--name` добавлен в `script.go`, а приветствие теперь выводится с его значением (по умолчанию `"world"`).
+
+```go
+package main
+
+import (
+    "flag"
+    "fmt"
+)
+
+func main() {
+    name := flag.String("name", "world", "Name to greet")
+    flag.Parse()
+    fmt.Printf("Hello, %s!\n", *name)
+}
+```
+
+Теперь при запуске программы можно указать имя, например:
+
+```bash
+go run script.go --name=Alice
+# Вывод: Hello, Alice!
+```
+
+Если флаг не указан, выводится стандартное `Hello, world!`.

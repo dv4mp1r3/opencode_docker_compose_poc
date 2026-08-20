@@ -1,0 +1,87 @@
+timestamp=2026-08-10T00:38:26.096Z level=INFO run=ff637695 message="creating instance" directory=/workspace/eval/ftp_server_bug
+timestamp=2026-08-10T00:38:26.098Z level=INFO run=ff637695 message=fromDirectory directory=/workspace/eval/ftp_server_bug
+timestamp=2026-08-10T00:38:26.130Z level=INFO run=ff637695 message=bootstrapping directory=/workspace/eval/ftp_server_bug
+timestamp=2026-08-10T00:38:26.138Z level=INFO run=ff637695 message=loading path=/home/node/.config/opencode/config.json
+timestamp=2026-08-10T00:38:26.140Z level=INFO run=ff637695 message=loading path=/home/node/.config/opencode/opencode.json
+timestamp=2026-08-10T00:38:26.142Z level=INFO run=ff637695 message=loading path=/home/node/.config/opencode/opencode.jsonc
+timestamp=2026-08-10T00:38:26.210Z level=INFO run=ff637695 message="all LSPs are disabled"
+timestamp=2026-08-10T00:38:26.211Z level=INFO run=ff637695 message="all formatters are disabled"
+timestamp=2026-08-10T00:38:26.211Z level=INFO run=ff637695 message=init
+timestamp=2026-08-10T00:38:26.314Z level=INFO run=ff637695 message=created id=ses_016e4baf5ffezAPpYBXgUSKAZc slug=eager-garden version=1.18.15 projectID=global directory=/workspace/eval/ftp_server_bug path=workspace/eval/ftp_server_bug workspaceID=undefined parentID=undefined title="New session - 2026-08-10T00:38:26.314Z" agent=undefined model=undefined metadata=undefined permission="[{\"permission\":\"question\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_enter\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_exit\",\"pattern\":\"*\",\"action\":\"deny\"}]" cost=0 tokens.input=0 tokens.output=0 tokens.reasoning=0 tokens.cache.read=0 tokens.cache.write=0 time.created=1786322306314 time.updated=1786322306314
+timestamp=2026-08-10T00:38:26.337Z level=INFO run=ff637695 message="event connected"
+timestamp=2026-08-10T00:38:26.589Z level=INFO run=ff637695 message=loop session.id=ses_016e4baf5ffezAPpYBXgUSKAZc step=0
+timestamp=2026-08-10T00:38:26.595Z level=INFO run=ff637695 message="shell tool using shell" shell=/usr/bin/bash
+timestamp=2026-08-10T00:38:26.599Z level=INFO run=ff637695 message=init count=1
+[0m
+> auto · gpt-oss:20b
+[0m
+timestamp=2026-08-10T00:38:26.614Z level=INFO run=ff637695 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_016e4baf5ffezAPpYBXgUSKAZc small=true agent=title mode=primary
+timestamp=2026-08-10T00:38:26.617Z level=INFO run=ff637695 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T00:38:26.688Z level=INFO run=ff637695 message="watcher backend" directory=/workspace/eval/ftp_server_bug platform=linux backend=inotify
+timestamp=2026-08-10T00:38:26.692Z level=INFO run=ff637695 message="project copy refresh started" projectID=global
+timestamp=2026-08-10T00:38:26.693Z level=INFO run=ff637695 message="project copy refresh done" projectID=global updated=[] removed=[]
+timestamp=2026-08-10T00:38:26.709Z level=INFO run=ff637695 message="booting location services" directory=/workspace/eval/ftp_server_bug workspaceID=undefined
+timestamp=2026-08-10T00:38:26.839Z level=INFO run=ff637695 message=process session.id=ses_016e4baf5ffezAPpYBXgUSKAZc messageID=msg_fe91b461e001TvsPxjZYWt6cwm
+timestamp=2026-08-10T00:38:26.839Z level=INFO run=ff637695 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_016e4baf5ffezAPpYBXgUSKAZc small=false agent=auto mode=primary
+timestamp=2026-08-10T00:38:26.841Z level=INFO run=ff637695 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T00:38:26.983Z level=ERROR run=ff637695 message="Failed to fetch models.dev" cause="Cause([Fail(HttpClientError: Transport error (GET https://models.opencode.ai/api.json) (cause: Error: Unable to connect. Is the computer able to access the url?))])"
+timestamp=2026-08-10T00:39:21.969Z level=INFO run=ff637695 message=evaluated permission=glob pattern=* action.permission=glob action.action=allow action.pattern=*
+timestamp=2026-08-10T00:39:22.042Z level=INFO run=ff637695 message=loop session.id=ses_016e4baf5ffezAPpYBXgUSKAZc step=1
+[0m✱ [0mGlob "*"[90m 2 matches[0m
+timestamp=2026-08-10T00:39:22.087Z level=INFO run=ff637695 message=process session.id=ses_016e4baf5ffezAPpYBXgUSKAZc messageID=msg_fe91c1ec0001jg4GYRtZVAy8YC
+timestamp=2026-08-10T00:39:22.088Z level=INFO run=ff637695 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_016e4baf5ffezAPpYBXgUSKAZc small=false agent=auto mode=primary
+timestamp=2026-08-10T00:39:22.090Z level=INFO run=ff637695 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T00:39:26.340Z level=INFO run=ff637695 message=evaluated permission=read pattern=workspace/eval/ftp_server_bug/ftp_server.py action.permission=read action.action=allow action.pattern=*
+timestamp=2026-08-10T00:39:26.381Z level=INFO run=ff637695 message=loop session.id=ses_016e4baf5ffezAPpYBXgUSKAZc step=2
+timestamp=2026-08-10T00:39:26.394Z level=INFO run=ff637695 message="touching file" file=/workspace/eval/ftp_server_bug/ftp_server.py
+[0m→ [0mRead ftp_server.py[90m [limit=400, offset=1][0m
+timestamp=2026-08-10T00:39:26.426Z level=INFO run=ff637695 message=process session.id=ses_016e4baf5ffezAPpYBXgUSKAZc messageID=msg_fe91c2faf0013wLE04m086OIyj
+timestamp=2026-08-10T00:39:26.426Z level=INFO run=ff637695 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_016e4baf5ffezAPpYBXgUSKAZc small=false agent=auto mode=primary
+timestamp=2026-08-10T00:39:26.428Z level=INFO run=ff637695 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T00:39:54.625Z level=INFO run=ff637695 message=evaluated permission=read pattern=workspace/eval/ftp_server_bug/ftp_server.py action.permission=read action.action=allow action.pattern=*
+timestamp=2026-08-10T00:39:54.708Z level=INFO run=ff637695 message=loop session.id=ses_016e4baf5ffezAPpYBXgUSKAZc step=3
+timestamp=2026-08-10T00:39:54.731Z level=INFO run=ff637695 message="touching file" file=/workspace/eval/ftp_server_bug/ftp_server.py
+[0m→ [0mRead ftp_server.py[90m [limit=200, offset=360][0m
+timestamp=2026-08-10T00:39:54.776Z level=INFO run=ff637695 message=process session.id=ses_016e4baf5ffezAPpYBXgUSKAZc messageID=msg_fe91c9e5e001pOQlpwLhN3143T
+timestamp=2026-08-10T00:39:54.778Z level=INFO run=ff637695 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_016e4baf5ffezAPpYBXgUSKAZc small=false agent=auto mode=primary
+timestamp=2026-08-10T00:39:54.781Z level=INFO run=ff637695 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T00:40:18.330Z level=INFO run=ff637695 message=evaluated permission=edit pattern=workspace/eval/ftp_server_bug/ftp_server.py action.permission=edit action.action=allow action.pattern=*
+timestamp=2026-08-10T00:40:18.333Z level=INFO run=ff637695 message=formatting file=/workspace/eval/ftp_server_bug/ftp_server.py
+timestamp=2026-08-10T00:40:18.347Z level=INFO run=ff637695 message="touching file" file=/workspace/eval/ftp_server_bug/ftp_server.py
+timestamp=2026-08-10T00:40:18.384Z level=INFO run=ff637695 message=loop session.id=ses_016e4baf5ffezAPpYBXgUSKAZc step=4
+[0m
+[0m← [0mEdit ftp_server.py
+Index: /workspace/eval/ftp_server_bug/ftp_server.py
+===================================================================
+--- /workspace/eval/ftp_server_bug/ftp_server.py
++++ /workspace/eval/ftp_server_bug/ftp_server.py
+@@ -370,9 +370,9 @@
+ 
+ def do_LIST(self, arg: str):
+     self.send_reply("150 Opening ASCII mode data connection.")
+     try:
+-        entries = os.listdir(self.server.root_dir)
++        entries = os.listdir(self.current_dir)
+         with self._open_data_socket() as dsock:
+             for name in entries:
+                 line = self._format_list_entry(name) + "\r\n"
+                 dsock.sendall(line.encode())
+
+[0m
+timestamp=2026-08-10T00:40:18.453Z level=INFO run=ff637695 message=process session.id=ses_016e4baf5ffezAPpYBXgUSKAZc messageID=msg_fe91cfad400121sT6R04kGrCEg
+timestamp=2026-08-10T00:40:18.455Z level=INFO run=ff637695 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_016e4baf5ffezAPpYBXgUSKAZc small=false agent=auto mode=primary
+timestamp=2026-08-10T00:40:18.459Z level=INFO run=ff637695 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T00:40:39.268Z level=INFO run=ff637695 message=evaluated permission=bash pattern="python3 -m py_compile ftp_server.py" action.permission=bash action.pattern="python3 *" action.action=allow
+timestamp=2026-08-10T00:40:39.491Z level=INFO run=ff637695 message=loop session.id=ses_016e4baf5ffezAPpYBXgUSKAZc step=5
+[0m$ [0mpython3 -m py_compile ftp_server.py
+(no output)
+[0m
+timestamp=2026-08-10T00:40:39.515Z level=INFO run=ff637695 message=process session.id=ses_016e4baf5ffezAPpYBXgUSKAZc messageID=msg_fe91d4d46001giSxuoBD3aEz4w
+timestamp=2026-08-10T00:40:39.516Z level=INFO run=ff637695 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_016e4baf5ffezAPpYBXgUSKAZc small=false agent=auto mode=primary
+timestamp=2026-08-10T00:40:39.519Z level=INFO run=ff637695 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T00:40:58.089Z level=INFO run=ff637695 message=loop session.id=ses_016e4baf5ffezAPpYBXgUSKAZc step=6
+timestamp=2026-08-10T00:40:58.099Z level=INFO run=ff637695 message="exiting loop" session.id=ses_016e4baf5ffezAPpYBXgUSKAZc
+timestamp=2026-08-10T00:40:58.123Z level=INFO run=ff637695 message="disposing instance" directory=/workspace/eval/ftp_server_bug
+real 152.81
+user 0.01
+sys 0.04

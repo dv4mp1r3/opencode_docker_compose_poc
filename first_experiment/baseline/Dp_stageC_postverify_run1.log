@@ -1,0 +1,57 @@
+We added new response constants after line 37. But need modify code with RNFR/RNTO support. Let's see current code: search for renaming maybe not implemented. Search 'rename' etc.
+Let's search for "do_" functions and see if rename exists. Search for "RN".
+No rename commands. We'll need to add do_RNFR and do_RNTO methods.
+
+We must store state per connection; we can use self.rnfr_path attribute initially None.
+
+Implement:
+
+- RNFR <path>: check login, resolve path using _resolve_path arg; if not exists or invalid -> send REPLY_550 or 350? specification: RNFR should return 350 (or 550 if does not exist or outside root). So implementation: resolve path; if not resolved path return 350? Actually for non-existent: reply 404 or 550. We'll send REPLY_550 for invalid and set self.rnfr_path=None maybe. If OK, store resolved path to self.rnfr_target and reply "350 Requested file action pending.\r\n".
+
+- RNTO <newpath>: check login; ensure previous rnfr_path set. If not --> 503 response. Then resolve target path relative root_dir. Validate new path's parent directory exists under root_dir. Also we need avoid overwriting existing or outside root dir? The specification: rename within root_dir; if new path already exists maybe respond 550? For simplicity, return REPLY_250 on success else REPLY_550. Steps:
+
+Retrieve self.rnfr_path; call _resolve_path for newpath (new relative or absolute). If None -> REPLY_550. Also verify that directory of new target exists: os.path.dirname(new_abs). Ensure dir is inside root_dir using same logic (maybe _ensure within root). We can check parent_path startswith root + os.sep etc.
+
+Then perform os.rename(src, dst); catch OSError -> reply 550. After rename set self.rnfr_path=None. Reply REPLY_250 success.
+
+Also we need to update RNFR path variable reset on error or on successful rename.
+
+Edge: if src == dst? then no change but still treat as success. Use os.rename; it might raise FileExistsError? In Python, rename overwrites destination file by default? Actually shutil.move would replace. os.rename will overwrite? On Unix, yes it can replace existing file, but allowed. We'll keep.
+
+Also need to update tests: none provided.
+
+We implemented constants for REPLY_350 etc earlier: We added these new consts. But we must import them as needed. They defined after previous ones; order fine.
+
+Now add methods.
+
+Let's implement edit of ftp_server.py near other do_* definitions possibly after do_REST or before do_FEAT.
+
+We'll use edit tool specifying oldString with a context that matches the location; choose to insert after some known function like do_REST maybe easier. We'll find where that ends line 229/230 etc. Actually do_REST defined lines 220-230. After that we can add new methods.
+
+To create edit: We need oldString unique. Use snippet of just before insertion point: maybe after line 230 comment? Let's inspect lines around 229-232.
+Need imports at top? We used os module which imported earlier. Also need attribute rnfr_target, no existing init; we can set in __init__ maybe? In FTPHandler.__init__ currently lines 51-60: there is current_dir and others but not rnfr_target. We'll add initialization after these assignments.
+
+We edited in between? No editing of __init__. We haven't changed it.
+
+Let's edit __init__ adding self.rnfr_target = None at line maybe 63. Let's locate section.
+
+Search for __init__ lines near start.
+Now we added attribute.
+
+Need to update imports maybe Optional is already imported at top yes.
+
+Now run pyflakes again to ensure no NameError REPLY_550 etc are defined earlier; yes. For RNTO and RNFR uses REPLY_350? We used self.send_reply("350 Requested file action pending;\\r\\n") but maybe better usage of constant REPLY_350 which we added earlier as "350 Requested file action pending;\\r\\n". But we inserted string literals. Should switch to constants for consistency, but not required.
+
+Also for FAILED responses: used 550 etc using literal.
+
+But tests may expect REPLY_350 and REPLY_250 constants usage? Not necessary.
+
+Edge: _resolve_path returns None if outside root. For RNFR should also check file exists; we used os.path.exists(target). Ensure imported os earlier yes.
+
+For RNTO destination: we used os.path.isdir(os.path.dirname(dst)). We must ensure that parent dir exists inside root. But _resolve_path already ensures inside root for dst. But if user passes relative path to same directory, dirname could be current_dir. Should check also exists. os.path.isdir checks existence and dirs.
+
+Also not verifying that target file does not exist? Not necessary.
+
+Edge: need to use os.rename might raise FileNotFoundError if src missing (unlikely). We'll catch OSError general.
+
+Now run pyflakes again.

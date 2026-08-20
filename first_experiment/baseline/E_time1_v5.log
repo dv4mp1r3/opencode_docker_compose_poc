@@ -1,0 +1,33 @@
+timestamp=2026-08-10T14:25:06.045Z level=INFO run=cfef0d21 message="creating instance" directory=/workspace
+timestamp=2026-08-10T14:25:06.046Z level=INFO run=cfef0d21 message=fromDirectory directory=/workspace
+timestamp=2026-08-10T14:25:06.057Z level=INFO run=cfef0d21 message=bootstrapping directory=/workspace
+timestamp=2026-08-10T14:25:06.067Z level=INFO run=cfef0d21 message=loading path=/home/node/.config/opencode/config.json
+timestamp=2026-08-10T14:25:06.070Z level=INFO run=cfef0d21 message=loading path=/home/node/.config/opencode/opencode.json
+timestamp=2026-08-10T14:25:06.070Z level=INFO run=cfef0d21 message=loading path=/home/node/.config/opencode/opencode.jsonc
+timestamp=2026-08-10T14:25:06.110Z level=INFO run=cfef0d21 message="all LSPs are disabled"
+timestamp=2026-08-10T14:25:06.111Z level=INFO run=cfef0d21 message="all formatters are disabled"
+timestamp=2026-08-10T14:25:06.111Z level=INFO run=cfef0d21 message=init
+timestamp=2026-08-10T14:25:06.179Z level=INFO run=cfef0d21 message=created id=ses_013efe57cffef3eAIpbDZdDp2s slug=stellar-wolf version=1.18.15 projectID=global directory=/workspace path=workspace workspaceID=undefined parentID=undefined title="New session - 2026-08-10T14:25:06.179Z" agent=undefined model=undefined metadata=undefined permission="[{\"permission\":\"question\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_enter\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_exit\",\"pattern\":\"*\",\"action\":\"deny\"}]" cost=0 tokens.input=0 tokens.output=0 tokens.reasoning=0 tokens.cache.read=0 tokens.cache.write=0 time.created=1786371906179 time.updated=1786371906179
+timestamp=2026-08-10T14:25:06.199Z level=INFO run=cfef0d21 message="event connected"
+timestamp=2026-08-10T14:25:06.386Z level=INFO run=cfef0d21 message=loop session.id=ses_013efe57cffef3eAIpbDZdDp2s step=0
+timestamp=2026-08-10T14:25:06.392Z level=INFO run=cfef0d21 message="shell tool using shell" shell=/usr/bin/bash
+timestamp=2026-08-10T14:25:06.395Z level=INFO run=cfef0d21 message=init count=1
+[0m
+> auto · gpt-oss:20b
+[0m
+timestamp=2026-08-10T14:25:06.408Z level=INFO run=cfef0d21 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013efe57cffef3eAIpbDZdDp2s small=true agent=title mode=primary
+timestamp=2026-08-10T14:25:06.411Z level=INFO run=cfef0d21 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T14:25:06.450Z level=INFO run=cfef0d21 message="watcher backend" directory=/workspace platform=linux backend=inotify
+timestamp=2026-08-10T14:25:06.453Z level=INFO run=cfef0d21 message="project copy refresh started" projectID=global
+timestamp=2026-08-10T14:25:06.454Z level=INFO run=cfef0d21 message="project copy refresh done" projectID=global updated=[] removed=[]
+timestamp=2026-08-10T14:25:06.467Z level=INFO run=cfef0d21 message="booting location services" directory=/workspace workspaceID=undefined
+timestamp=2026-08-10T14:25:06.563Z level=INFO run=cfef0d21 message=process session.id=ses_013efe57cffef3eAIpbDZdDp2s messageID=msg_fec101b54001DC23k8bFw6l4Hk
+timestamp=2026-08-10T14:25:06.571Z level=INFO run=cfef0d21 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013efe57cffef3eAIpbDZdDp2s small=false agent=auto mode=primary
+timestamp=2026-08-10T14:25:06.572Z level=INFO run=cfef0d21 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T14:25:06.754Z level=ERROR run=cfef0d21 message="Failed to fetch models.dev" cause="Cause([Fail(HttpClientError: Transport error (GET https://models.opencode.ai/api.json) (cause: Error: Unable to connect. Is the computer able to access the url?))])"
+timestamp=2026-08-10T14:26:01.598Z level=INFO run=cfef0d21 message=loop session.id=ses_013efe57cffef3eAIpbDZdDp2s step=1
+timestamp=2026-08-10T14:26:01.599Z level=INFO run=cfef0d21 message="exiting loop" session.id=ses_013efe57cffef3eAIpbDZdDp2s
+timestamp=2026-08-10T14:26:01.603Z level=INFO run=cfef0d21 message="disposing instance" directory=/workspace
+real 56.02
+user 0.01
+sys 0.00

@@ -1,0 +1,8 @@
+.fake-widget {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.fake-widget--compact {
+    font-size: 0.85em;
+}

@@ -1,0 +1,179 @@
+We need to locate the relevant file(s). The repo seems small. Let's list root.
+That example does not have a /hello route. But task says add reading query param name from /hello?name=Ivan and put into response, without changing httplib.h. Perhaps we need to modify server code: add a handler for /hello.
+
+Search for other server examples.
+The server currently has only root GET handler; it doesn't parse query parameters. To implement reading query param name from /hello?name=Ivan, we need to add a separate route /hello that extracts the "name" from the request path? The simple httplib.h's Request struct only has path string and no query parsing. We cannot change httplib.h.
+
+Therefore we need to parse query from req.path manually in our handler. For route "/hello", but the path may include query components, e.g., "/hello?name=Ivan". In current server implementation, when a request arrives, it splits method,path,http_version via line_stream >> method >> path >> http_version; so the 'path' includes the entire request-target: including query string. So req.path will be something like "/hello?name=Ivan". Thus we can compare with "/hello" maybe after trimming query part. We need to handle that properly.
+
+We should set a handler for "/hello" using svr.Get("/hello", ...). But because path matching will match only exact path, and includes query string as part of the path variable? Let's inspect code: In Server.listen method, after parsing request line, they set Request req{path}; where 'path' is whatever from HTTP line. The handlers_ map uses key path to find handler; it looks up with 'handlers_.find(path)'.
+
+Thus for a client request "GET /hello?name=Ivan HTTP/1.1", the 'path' will be "/hello?name=Ivan". Our handler registration expects an exact match. We can register for "/hello?name="... But we don't know query param value ahead; we need to capture all queries starting with "/hello". The simplest trick: register two handlers: one for "/hello" without query, but when a request comes with ?name=Ivan, the path won't match exactly so default_handler_ may be used. Since we have root handler defined earlier as Get("/...",). That matches only "/" or "", not others.
+
+Better: Instead of registering a specific route, just override default_handler to handle all requests; within it parse path and produce appropriate response for /hello?name=Ivan. But that would remove the file-serving logic.
+
+Alternative: Write route that handles any path starting with "/hello" by matching prefix manually: create handler registered for "/". In Get("/", ...) currently file server. Maybe we can modify that handler to detect if req.path startswith "/hello?". That could work: keep same root handler but add if condition first before serving files.
+
+We must not alter httplib.h; only change example.cpp (the "server").
+
+We'll modify the lambda in svr.Get("/", ... ) to:
+
+- Parse req.path string.
+- If path starts with "/hello", extract query param name. Example code: find '?' pos, then parse substring after '?', split by '&', find key 'name'. Simple parsing: iterate over pairs separated by '&', split at '='.
+
+Return res.set_content("Hello " + name or default) as text/plain.
+
+If no name provided set some default like "world" or empty. But requirement: read query param name and insert into response. Response maybe something simple such as "Hello Ivan". Implementation can use placeholder.
+
+Need to maintain previous behavior for other paths.
+
+Edge cases: The path may include leading slash; we need to find first '?' char.
+
+Implementation details:
+
+```
+std::string pth = req.path;
+if (pth.rfind("/hello", 0) == 0) {
+    std::string name = "world";
+    size_t qpos = pth.find('?');
+    if (qpos != std::string::npos) {
+        std::string query = pth.substr(qpos + 1);
+        // find 'name='
+        size_t eq = query.find("name=");
+        if (eq != std::string::npos) {
+            size_t end = query.find('&', eq);
+            if (end == std::string::npos) end = query.size();
+            name = query.substr(eq + 5, end - (eq+5));
+        }
+    }
+    res.set_content("Hello " + name, "text/plain");
+    return;
+}
+```
+
+Return after set? In current lambda body after file serving, there's no return; but we can just `return;` after handling /hello.
+
+However need to include the rest of code for other paths unchanged. Implementation: insert at beginning of lambda before existing code lines 28 onwards perhaps.
+
+Let's modify example.cpp accordingly.
+
+We'll edit example.cpp.
+We need to edit this portion. We can modify inside lambda at the beginning: add logic before file path resolution.
+
+Thus we will replace the content from line 27 to after maybe adding new block.
+
+Simpler: use edit to replace lines starting with `svr.Get("/", ...` etc but entire lambda body might be huge.
+
+But easier: we can insert code after opening `{` of lambda. We need to find the line containing `{` for that lambda: It's on same line 27? It has `svr.Get("/", [&](const httplib::Request& req, httplib::Response& res) {`. So after that curly brace there's a newline and indent.
+
+We can modify by editing just after line 28? Actually line 28 is the comment. We want to add new block at beginning of lambda body. So we need to insert lines after opening `{`, i.e., between line 27 and 28. But our tool edit expects replace entire content, not insert. Might use grep? Not possible. Maybe simple: modify line 28's comment to include early exit? But we can't preserve old code.
+
+Easiest: rewrite the whole lambda body from line 27 to 56. That is many lines but ok. We'll replace that block with new code that first checks if request path starts with "/hello", else proceed same as before.
+
+We need to provide 'oldString' of exact content to match; that's huge. Instead we could edit by replacing the opening line of lambda and the closing `});` but leaving internal unchanged? But that might mess parsing.
+
+Maybe easier: keep existing lambda body but add new handler for "/hello" separately using sv.Get("/hello", ... ). That will run independently; no need to modify file server lambda. Because path must match exactly, and our request includes query string after '?' so the handler key won't match. This is problematic.
+
+But we can add a default_handler that covers all requests including /hello?name=Ivan. But then file serving disabled. Not good.
+
+Therefore we should modify existing lambda to detect if whole req.path starts with "/hello". Even though req.path includes query, that's fine; our check `if (pth.rfind("/hello",0) == 0)` will match any that start "/hello" regardless of query.
+
+That means for request "GET /hello?name=Ivan HTTP/1.1", path is "/hello?name=Ivan". rfind checks from begin. It matches. Good.
+
+Thus we modify lambda body to insert logic at top before file serving steps, and if handled, return immediately.
+
+Implementation: At line after `{`, add:
+
+```
+    // Handle /hello path with query param name
+    const std::string &path = req.path;
+    if (path.rfind("/hello", 0) == 0) {
+        std::string name = "world";
+        std::size_t qpos = path.find('?');
+        if (qpos != std::string::npos) {
+            std::string query = path.substr(qpos + 1);
+            // find name=
+            std::size_t posName = query.find("name=");
+            if (posName != std::string::npos) {
+                std::size_t end = query.find('&', posName);
+                if (end == std::string::npos) end = query.size();
+                name = query.substr(posName + 5, end - (posName + 5));
+            }
+        }
+        res.set_content("Hello " + name, "text/plain");
+        return;
+    }
+```
+
+This will return early.
+
+Then proceed with original file serving code.
+
+Thus we need to edit the lambda body: after line 27's `{`. Let's patch by replacing everything from that opening brace until closing `});` with new block that includes earlier logic plus old content. That might be large but necessary.
+
+But we can do incremental edits: first replace entire lambda block with new content; that's allowed.
+
+Let's create a string for replacement starting at line 27 and ending at line 56 (just before the closing `});`?). Actually closing is line 56? Wait original shows lines until 55? Let's check around end.
+Great. We'll replace lines 27-56 inclusive with new lambda body that includes the early check and then rest identical.
+
+We'll craft new string accordingly. Let's assemble new content starting from line 27 "    sv.Get("/", [&](const httplib::Request& req, httplib::Response& res) {" then same code until end of block after adding the check.
+
+We need to keep indentation consistent: existing lines start with 4 spaces before `svr`. The lambda body lines have 8 spaces indent etc.
+
+New block:
+
+```
+    sv.Get("/", [&](const httplib::Request& req, httplib::Response& res) {
+        // Handle /hello path with query param name
+        std::string const &path = req.path;
+        if (path.rfind("/hello", 0) == 0) {
+            std::string name = "world";
+            size_t qpos = path.find('?');
+            if (qpos != std::string::npos) {
+                std::string query = path.substr(qpos + 1);
+                size_t posName = query.find("name=");
+                if (posName != std::string::npos) {
+                    size_t end = query.find('&', posName);
+                    if (end == std::string::npos)
+                        end = query.size();
+                    name = query.substr(posName + 5, end - (posName + 5));
+                }
+            }
+            res.set_content("Hello " + name, "text/plain");
+            return;
+        }
+
+        // Resolve file path relative to root directory
+        std::filesystem::path p = root.empty() ? std::filesystem::current_path() : std::filesystem::path(root);
+        std::string sub = req.path.substr(1); // remove leading '/'
+        if (sub.empty()) sub = "index.html";
+        p /= sub;
+
+        if (std::filesystem::exists(p) && std::filesystem::is_regular_file(p)) {
+            std::ifstream file(p, std::ios::binary | std::ios::ate);
+            if (file) {
+                std::streamsize size = file.tellg();
+                file.seekg(0, std::ios::beg);
+                std::string buffer(size, '\0');
+                file.read(&buffer[0], size);
+                res.set_content(buffer, "text/plain");
+                res.status = 200;
+            } else {
+                res.status = 500;
+                res.set_content("Cannot read file", "text/plain");
+            }
+        } else {
+            // Directory listing if target is not a file
+            std::string dirs;
+            for (const auto &entry : std::filesystem::directory_iterator(p.parent_path())) {
+                dirs += entry.path().filename().string() + "\n";
+            }
+            res.set_content("<html><body><h1>Directory listing</h1>\n<pre>" + dirs + "</pre></body></html>", "text/html");
+        }
+
+    });
+```
+
+We need to ensure trailing spaces etc. We'll set replaceAll? We should replace the exact block from start of lambda to closing `});`. Provide oldString as that entire block (lines 27-56). That is large; but okay.
+
+Let's fetch original string for lines 27-56 to use as oldString.

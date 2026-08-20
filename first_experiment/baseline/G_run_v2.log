@@ -1,0 +1,20 @@
+We need find where shortcode [fake_widget] defined and rendered. Already defined in class-shortcode-manager register method add_shortcode. Rendered probably in widget-display.php using do_shortcode. Let's read.
+Шорткод `[fake_widget]` **определяется** в файле  
+```
+/workspace/eval/fake_plugin/includes/class-shortcode-manager.php
+```
+в методе `register()` через вызов  
+```php
+add_shortcode('fake_widget', [$this, 'render']);
+```
+
+Он **рендерится** (вызывается) в публичном шаблоне:  
+```
+/workspace/eval/fake_plugin/public/partials/widget-display.php
+```
+через строку  
+```php
+<?php echo do_shortcode('[fake_widget mode="compact" limit="3"]'); ?>
+```
+
+Таким образом, определение находится в `class-shortcode-manager.php`, а отображение – в файле `widget-display.php`.

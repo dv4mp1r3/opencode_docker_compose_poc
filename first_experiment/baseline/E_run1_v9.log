@@ -1,0 +1,5 @@
+User wants: "Добавь чтение query-параметра name из /hello?name=Ivan и подставь его в ответ, не меняя httplib.h."
+
+So we have to modify example.cpp or perhaps add new route.
+
+We need to keep reading from example.cpp. We want to set up a GET handler for "/hello" that captures query param "name". httplib::Request has Query and maybe some API: req.get_value? Let's inspect httplib.h's query parsing.
