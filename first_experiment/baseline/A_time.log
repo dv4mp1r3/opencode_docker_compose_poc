@@ -1,0 +1,57 @@
+timestamp=2026-08-09T23:29:50.965Z level=INFO run=7589ec10 message="creating instance" directory=/workspace
+timestamp=2026-08-09T23:29:50.966Z level=INFO run=7589ec10 message=fromDirectory directory=/workspace
+timestamp=2026-08-09T23:29:50.976Z level=INFO run=7589ec10 message=bootstrapping directory=/workspace
+timestamp=2026-08-09T23:29:50.988Z level=INFO run=7589ec10 message=loading path=/home/node/.config/opencode/config.json
+timestamp=2026-08-09T23:29:50.988Z level=INFO run=7589ec10 message=loading path=/home/node/.config/opencode/opencode.json
+timestamp=2026-08-09T23:29:50.988Z level=INFO run=7589ec10 message=loading path=/home/node/.config/opencode/opencode.jsonc
+timestamp=2026-08-09T23:29:51.034Z level=INFO run=7589ec10 message="all LSPs are disabled"
+timestamp=2026-08-09T23:29:51.034Z level=INFO run=7589ec10 message="all formatters are disabled"
+timestamp=2026-08-09T23:29:51.034Z level=INFO run=7589ec10 message=init
+timestamp=2026-08-09T23:29:51.117Z level=INFO run=7589ec10 message=created id=ses_0172385f2ffeO1LFK26E9FOqJg slug=curious-wizard version=1.18.15 projectID=global directory=/workspace path=workspace workspaceID=undefined parentID=undefined title="New session - 2026-08-09T23:29:51.117Z" agent=undefined model=undefined metadata=undefined permission="[{\"permission\":\"question\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_enter\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_exit\",\"pattern\":\"*\",\"action\":\"deny\"}]" cost=0 tokens.input=0 tokens.output=0 tokens.reasoning=0 tokens.cache.read=0 tokens.cache.write=0 time.created=1786318191117 time.updated=1786318191117
+timestamp=2026-08-09T23:29:51.140Z level=INFO run=7589ec10 message="event connected"
+timestamp=2026-08-09T23:29:51.401Z level=INFO run=7589ec10 message=loop session.id=ses_0172385f2ffeO1LFK26E9FOqJg step=0
+timestamp=2026-08-09T23:29:51.407Z level=INFO run=7589ec10 message="shell tool using shell" shell=/usr/bin/bash
+timestamp=2026-08-09T23:29:51.410Z level=INFO run=7589ec10 message=init count=1
+[0m
+> auto · gpt-oss:20b
+[0m
+timestamp=2026-08-09T23:29:51.423Z level=INFO run=7589ec10 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_0172385f2ffeO1LFK26E9FOqJg small=true agent=title mode=primary
+timestamp=2026-08-09T23:29:51.426Z level=INFO run=7589ec10 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-09T23:29:51.475Z level=INFO run=7589ec10 message="watcher backend" directory=/workspace platform=linux backend=inotify
+timestamp=2026-08-09T23:29:51.480Z level=INFO run=7589ec10 message="project copy refresh started" projectID=global
+timestamp=2026-08-09T23:29:51.481Z level=INFO run=7589ec10 message="project copy refresh done" projectID=global updated=[] removed=[]
+timestamp=2026-08-09T23:29:51.505Z level=INFO run=7589ec10 message="booting location services" directory=/workspace workspaceID=undefined
+timestamp=2026-08-09T23:29:51.633Z level=INFO run=7589ec10 message=process session.id=ses_0172385f2ffeO1LFK26E9FOqJg messageID=msg_fe8dc7b2a0019ULdhTiTl43xoV
+timestamp=2026-08-09T23:29:51.634Z level=INFO run=7589ec10 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_0172385f2ffeO1LFK26E9FOqJg small=false agent=auto mode=primary
+timestamp=2026-08-09T23:29:51.641Z level=INFO run=7589ec10 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-09T23:29:51.862Z level=ERROR run=7589ec10 message="Failed to fetch models.dev" cause="Cause([Fail(HttpClientError: Transport error (GET https://models.opencode.ai/api.json) (cause: Error: Unable to connect. Is the computer able to access the url?))])"
+timestamp=2026-08-09T23:31:17.627Z level=INFO run=7589ec10 message=evaluated permission=glob pattern=script.go action.permission=glob action.action=allow action.pattern=*
+timestamp=2026-08-09T23:31:17.712Z level=INFO run=7589ec10 message=loop session.id=ses_0172385f2ffeO1LFK26E9FOqJg step=1
+[0m✱ [0mGlob "script.go"[90m 2 matches[0m
+timestamp=2026-08-09T23:31:17.764Z level=INFO run=7589ec10 message=process session.id=ses_0172385f2ffeO1LFK26E9FOqJg messageID=msg_fe8ddcc52001znmZvJZXKaHarU
+timestamp=2026-08-09T23:31:17.764Z level=INFO run=7589ec10 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_0172385f2ffeO1LFK26E9FOqJg small=false agent=auto mode=primary
+timestamp=2026-08-09T23:31:17.766Z level=INFO run=7589ec10 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-09T23:31:20.460Z level=INFO run=7589ec10 message=evaluated permission=read pattern=workspace/script.go action.permission=read action.action=allow action.pattern=*
+timestamp=2026-08-09T23:31:20.486Z level=INFO run=7589ec10 message=loop session.id=ses_0172385f2ffeO1LFK26E9FOqJg step=2
+timestamp=2026-08-09T23:31:20.498Z level=INFO run=7589ec10 message="touching file" file=/workspace/script.go
+[0m→ [0mRead script.go[90m [limit=200, offset=1][0m
+timestamp=2026-08-09T23:31:20.525Z level=INFO run=7589ec10 message=process session.id=ses_0172385f2ffeO1LFK26E9FOqJg messageID=msg_fe8ddd728001ZYzIq3VFNzw2jW
+timestamp=2026-08-09T23:31:20.526Z level=INFO run=7589ec10 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_0172385f2ffeO1LFK26E9FOqJg small=false agent=auto mode=primary
+timestamp=2026-08-09T23:31:20.526Z level=INFO run=7589ec10 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-09T23:31:35.474Z level=INFO run=7589ec10 message=evaluated permission=edit pattern=workspace/script.go action.permission=edit action.action=allow action.pattern=*
+timestamp=2026-08-09T23:31:35.477Z level=INFO run=7589ec10 message=formatting file=/workspace/script.go
+timestamp=2026-08-09T23:31:35.478Z level=INFO run=7589ec10 message="touching file" file=/workspace/script.go
+timestamp=2026-08-09T23:31:35.502Z level=INFO run=7589ec10 message=loop session.id=ses_0172385f2ffeO1LFK26E9FOqJg step=3
+[0m
+[0m← [0mWrite script.go
+Wrote file successfully.
+[0m
+timestamp=2026-08-09T23:31:35.543Z level=INFO run=7589ec10 message=process session.id=ses_0172385f2ffeO1LFK26E9FOqJg messageID=msg_fe8de11d1001oKds0jO5zX0eXB
+timestamp=2026-08-09T23:31:35.544Z level=INFO run=7589ec10 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_0172385f2ffeO1LFK26E9FOqJg small=false agent=auto mode=primary
+timestamp=2026-08-09T23:31:35.546Z level=INFO run=7589ec10 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-09T23:31:49.927Z level=INFO run=7589ec10 message=loop session.id=ses_0172385f2ffeO1LFK26E9FOqJg step=4
+timestamp=2026-08-09T23:31:49.931Z level=INFO run=7589ec10 message="exiting loop" session.id=ses_0172385f2ffeO1LFK26E9FOqJg
+timestamp=2026-08-09T23:31:49.940Z level=INFO run=7589ec10 message="disposing instance" directory=/workspace
+real 119.65
+user 0.01
+sys 0.20

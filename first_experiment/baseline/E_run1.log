@@ -1,0 +1,62 @@
+We need to add reading query param name from /hello?name=Ivan and substitute into response, without changing httplib.h. We should modify example.cpp such that when request path is /hello?name=Ivan responds with e.g., "Hello Ivan". Currently svr.Get("/", ...). But we must not change httplib.h; but we can create new Get handler for /hello: like svr.Get("/hello", handler). However, Request only contains string path - no query parsing. In Request struct, only path is stored without args? It stores request path exactly from HTTP header. The raw path includes query? In server's parsing, line 107 extracts path from request line (e.g., GET /hello?name=Ivan). So req.path will include the full path with query string? Actually it splits method >> path >> http_version; if path contains question mark and name, it's part of string. So handling needs to parse query param. We'll modify handler for "/hello" to check if req.path startswith "/hello". But we can use Get("/hello",...). In handler, need to parse query part: find '?' then get param. Also respond body accordingly using res.set_content.
+
+Add a new route before default? We have only "/" route; adding "/hello" might conflict? Let's add specific route earlier.
+
+Implement in example.cpp around lines 25-56. Add new Get for "/hello". Use lambda capturing svr maybe not needed.
+
+Implementation: 
+
+svr.Get("/hello", [&](const httplib::Request& req, httplib::Response& res){
+    std::string name = "world";
+    auto pos = req.path.find('?');
+    if (pos != std::string::npos) {
+        std::string query = req.path.substr(pos+1);
+        // parse simple name=...
+        size_t start = 0;
+        while(start<query.size()){
+            size_t eq = query.find('=', start);
+            if(eq==std::string::npos) break;
+            std::string key = query.substr(start, eq-start);
+            size_t amp = query.find('&', eq+1);
+            std::string val = query.substr(eq+1, (amp==std::string::npos?query.size():amp)-eq-1);
+            if(key=="name") name=val;
+            start = (amp==std::string::npos)?query.size():amp+1;
+        }
+    }
+    res.set_content("Hello " + name, "text/plain");
+});
+
+But we also want to keep existing default handler for "/". Since Get with path "/" and others, order may not matter; server uses map lookup; if we add Get("/hello", ...) it will be handled separately. But Request only contains the path string includes query part. For /hello?name=Ivan, request.path will be "/hello?name=Ivan" which would not match "/hello". So our handler should check if req.path starts with "/hello". Actually easier: Use svr.Get("/", ...). In that handler we can parse query for '/hello' path.
+
+Simpler: modify existing default handler to handle /hello. But maybe better: change route to accept any "/" path; then inside, detect if req.path.substr(0,6) == "/hello" etc. The requirement: "Добавь чтение query-параметра name из /hello?name=Ivan и подставь его в ответ". So we should respond at endpoint /hello with greeting. Could integrate into the root handler.
+
+Implement by modifying the lambda for Get("/"). We'll add code to check if req.path startswith "/hello". We'll parse as above and set res accordingly with "Hello %s". else proceed existing logic?
+
+Hence modify lines 27-55: in lambda before others, detect. But maybe easier: add new handler before default:
+
+svr.Get("/hello", ...). Since request path will be exactly "/hello?name=Ivan" not match "/hello". So that's problematic.
+
+Thus best to handle inside default route: if req.path startswith "/hello". Let's implement patch in example.cpp.
+
+Open file lines earlier: 27-55. We edit accordingly.
+
+Also need to include <string> already present.
+
+Implementation details: Add at start of lambda:
+
+if (req.path.rfind("/hello",0)==0) { // path starts with /hello
+   parse query to extract name;
+   res.set_content("Hello " + name, "text/plain");
+   return; 
+}
+
+Then proceed next code. Because we are using default handler for "/": it will get any path but not handle root? Wait it's only set for "/" route or path empty. The Get("/", ...) with condition path=="/" OR path.empty() sets default_handler_. So this lambda used for all paths when no specific match. Good.
+
+Implement code accordingly.
+
+Let's patch file.
+We added code, but note we used `return;` inside lambda returning void? But the lambda expects void; return without value is ok. We set res and return.
+
+Now need to test compile & run.
+
+Let's build with g++ example.cpp.

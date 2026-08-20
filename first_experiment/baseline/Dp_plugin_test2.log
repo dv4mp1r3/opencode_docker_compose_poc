@@ -1,0 +1,115 @@
+The root path appears `/workspace/eval/ftp_server_rename`. Let's list it.
+We need add RNTO method. The snippet shows that after RNFR we have extra logic referencing arg.upper() "S" etc leftover from some previous code maybe? That block seems erroneous: after setting pending, reply 350; then there's a check on arg for "S". That appears unintended. We'll need to replace whole method.
+
+Better to remove the stray lines and add proper implementation.
+
+So modify do_RNFR to not include those extra conditions. Replace from line 217 to maybe 232? Actually includes until line 235 inclusive? The lines:
+
+217: def do_RNFR(self, arg: str):
+
+...
+230: self.pending_rename_from = abs_path
+231: self.send_reply(REPLY_350)
+232: if arg.upper().strip() == "S":
+233:     self.send_reply("200 Mode set to S.\r\n")
+234: else:
+235:     self.send_reply("504 Command not implemented for that parameter.\r\n")
+
+We need to replace this entire method body with cleaner one and add RNTO.
+
+Thus we need an edit replacing lines 217-236. We'll use replaceAll true or specific? We can edit by specifying the old string containing the block; but must provide exact match. Might be easier to delete that block and insert new after it. Since we cannot create new file etc, we will replace entire method with new implementation.
+
+Let's capture current lines 217-236 inclusive:
+
+```
+def do_RNFR(self, arg: str):
+    """
+    Сначала запоминаем путь для переименования.
+    Отправляем ответ 350 при успехе либо 550 если путь не существует/выходит за root_dir.
+    """
+    if not self.logged_in:
+        self.send_reply(REPLY_530)
+        return
+    abs_path = self._resolve_path(arg)
+    if not abs_path or not os.path.exists(abs_path):
+        self.send_reply(REPLY_550)
+        return
+    # Убедимся, что путь внутри root_dir
+    self.pending_rename_from = abs_path
+    self.send_reply(REPLY_350)
+    if arg.upper().strip() == "S":
+        self.send_reply("200 Mode set to S.\r\n")
+    else:
+        self.send_reply("504 Command not implemented for that parameter.\r\n")
+```
+
+Yes. We'll replace with new body and then add do_RNTO below it.
+
+So edit oldString exactly containing above block. Need line numbers? Provided lines; we can use exact text.
+
+Let's prepare edit: oldString is the whole block from "def do_RNFR..." to last else block including newline after. Ensure indentation consistent. Let's craft.
+
+We should confirm there are no trailing spaces etc. We'll copy as appears.
+
+Now newString will be:
+
+```
+def do_RNFR(self, arg: str):
+    """
+    Сначала запоминаем путь для переименования.
+    Отправляем ответ 350 при успехе или 550 если путь не существует/выходит за root_dir.
+    """
+    if not self.logged_in:
+        self.send_reply(REPLY_530)
+        return
+    abs_path = self._resolve_path(arg)
+    if not abs_path or not os.path.exists(abs_path):
+        self.send_reply(REPLY_550)
+        return
+    # Убедимся, что путь внутри root_dir
+    self.pending_rename_from = abs_path
+    self.send_reply(REPLY_350)
+
+def do_RNTO(self, arg: str):
+    """
+    Переименовываем файл из pending_rename_from в новый путь.
+    Отправляем 250 при успехе или 503 если RNFR не был сделан.
+    """
+    if not self.logged_in:
+        self.send_reply(REPLY_530)
+        return
+    if not getattr(self, "pending_rename_from", None):
+        self.send_reply(REPLY_503)
+        return
+    target_abs = self._resolve_path(arg)
+    if not target_abs:
+        self.send_reply(REPLY_550)
+        return
+    dest_dir = os.path.dirname(target_abs)
+    if not os.path.isdir(dest_dir):
+        try:
+            os.makedirs(dest_dir, exist_ok=True)
+        except Exception:
+            self.send_reply(REPLY_550)
+            return
+    try:
+        os.rename(self.pending_rename_from, target_abs)
+        self.pending_rename_from = None
+        self.send_reply(REPLY_250)
+    except OSError:
+        self.send_reply(REPLY_550)
+```
+
+Note: we inserted both methods contiguous. But after first method ends at line 231 send reply 350 then end of function? We added no return, so it returns automatically.
+
+But there's still extra lines previously from 232-235 that should be removed; our new block does not include them.
+
+Let's craft the edit call.
+В «ftp_server.py» добавлена поддержка команд переименования файлов:
+
+* Добавлены константы ответов `REPLY_250` и `REPLY_503`.
+* Переписана логика команды `RNFR`: теперь просто запоминает путь, возвращая 350 при успехе.
+* Реализована новая команда `RNTO`, которая переименовывает сохранённый файл в указанный адрес, отвечая 250 при успехе или 503, если предыдущий `RNFR` не был выполнен.  
+* Удалены лишние строки из прежней реализации `RNFR`.
+
+Синтаксическая проверка прошла успешно (команда `python3 -m py_compile ftp_server.py`). Код готов к использованию через команды `RNFR <path>` и `RNTO <newpath>`.

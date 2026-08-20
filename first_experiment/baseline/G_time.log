@@ -1,0 +1,37 @@
+timestamp=2026-08-09T23:49:06.084Z level=INFO run=19ec73ea message="creating instance" directory=/workspace/eval/fake_plugin
+timestamp=2026-08-09T23:49:06.085Z level=INFO run=19ec73ea message=fromDirectory directory=/workspace/eval/fake_plugin
+timestamp=2026-08-09T23:49:06.108Z level=INFO run=19ec73ea message=bootstrapping directory=/workspace/eval/fake_plugin
+timestamp=2026-08-09T23:49:06.112Z level=INFO run=19ec73ea message=loading path=/home/node/.config/opencode/config.json
+timestamp=2026-08-09T23:49:06.112Z level=INFO run=19ec73ea message=loading path=/home/node/.config/opencode/opencode.json
+timestamp=2026-08-09T23:49:06.114Z level=INFO run=19ec73ea message=loading path=/home/node/.config/opencode/opencode.jsonc
+timestamp=2026-08-09T23:49:06.223Z level=INFO run=19ec73ea message="all LSPs are disabled"
+timestamp=2026-08-09T23:49:06.223Z level=INFO run=19ec73ea message="all formatters are disabled"
+timestamp=2026-08-09T23:49:06.223Z level=INFO run=19ec73ea message=init
+timestamp=2026-08-09T23:49:06.354Z level=INFO run=19ec73ea message=created id=ses_01711e54effepOgQEjs6kUGkKz slug=kind-orchid version=1.18.15 projectID=global directory=/workspace/eval/fake_plugin path=workspace/eval/fake_plugin workspaceID=undefined parentID=undefined title="New session - 2026-08-09T23:49:06.354Z" agent=undefined model=undefined metadata=undefined permission="[{\"permission\":\"question\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_enter\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_exit\",\"pattern\":\"*\",\"action\":\"deny\"}]" cost=0 tokens.input=0 tokens.output=0 tokens.reasoning=0 tokens.cache.read=0 tokens.cache.write=0 time.created=1786319346354 time.updated=1786319346354
+timestamp=2026-08-09T23:49:06.380Z level=INFO run=19ec73ea message="event connected"
+timestamp=2026-08-09T23:49:06.714Z level=INFO run=19ec73ea message=loop session.id=ses_01711e54effepOgQEjs6kUGkKz step=0
+timestamp=2026-08-09T23:49:06.725Z level=INFO run=19ec73ea message="shell tool using shell" shell=/usr/bin/bash
+timestamp=2026-08-09T23:49:06.736Z level=INFO run=19ec73ea message=init count=1
+[0m
+> auto · gpt-oss:20b
+[0m
+timestamp=2026-08-09T23:49:06.761Z level=INFO run=19ec73ea message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_01711e54effepOgQEjs6kUGkKz small=true agent=title mode=primary
+timestamp=2026-08-09T23:49:06.773Z level=INFO run=19ec73ea message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-09T23:49:06.793Z level=ERROR run=19ec73ea message="Failed to fetch models.dev" cause="Cause([Fail(HttpClientError: Transport error (GET https://models.opencode.ai/api.json) (cause: Error: Unable to connect. Is the computer able to access the url?))])"
+timestamp=2026-08-09T23:49:06.889Z level=INFO run=19ec73ea message="watcher backend" directory=/workspace/eval/fake_plugin platform=linux backend=inotify
+timestamp=2026-08-09T23:49:06.897Z level=INFO run=19ec73ea message="project copy refresh started" projectID=global
+timestamp=2026-08-09T23:49:06.898Z level=INFO run=19ec73ea message="project copy refresh done" projectID=global updated=[] removed=[]
+timestamp=2026-08-09T23:49:06.914Z level=INFO run=19ec73ea message="booting location services" directory=/workspace/eval/fake_plugin workspaceID=undefined
+timestamp=2026-08-09T23:49:07.201Z level=INFO run=19ec73ea message=process session.id=ses_01711e54effepOgQEjs6kUGkKz messageID=msg_fe8ee1c1d001nts6zdOt7EVMKN
+timestamp=2026-08-09T23:49:07.203Z level=INFO run=19ec73ea message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_01711e54effepOgQEjs6kUGkKz small=false agent=auto mode=primary
+timestamp=2026-08-09T23:49:07.206Z level=INFO run=19ec73ea message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-09T23:49:35.711Z level=INFO run=19ec73ea message=evaluated permission=glob pattern=* action.permission=glob action.action=allow action.pattern=*
+timestamp=2026-08-09T23:49:35.724Z level=INFO run=19ec73ea message=evaluated permission=external_directory pattern=/* action.permission=external_directory action.action=ask action.pattern=*
+timestamp=2026-08-09T23:49:35.725Z level=INFO run=19ec73ea message=asking id=per_fe8ee8d6d001iPv7y0Zn2TiVRW permission=external_directory patterns="[\"/*\"]"
+[93m[1m! [0mpermission requested: external_directory (/*); auto-rejecting
+[0m✗ [0mGlob "*" failed[90m in /[0m
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
+timestamp=2026-08-09T23:49:35.778Z level=INFO run=19ec73ea message="disposing instance" directory=/workspace/eval/fake_plugin
+real 30.60
+user 0.01
+sys 0.01

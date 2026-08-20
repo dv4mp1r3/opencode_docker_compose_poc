@@ -1,0 +1,154 @@
+Exporting session: ses_016f267bcffei5o9yCm4ci76aT
+{
+  "info": {
+    "id": "ses_016f267bcffei5o9yCm4ci76aT",
+    "slug": "jolly-wizard",
+    "projectID": "global",
+    "directory": "/workspace",
+    "path": "workspace",
+    "title": "Найти актуальную версию Go",
+    "agent": "auto",
+    "model": {
+      "id": "gpt-oss:20b",
+      "providerID": "ollama"
+    },
+    "version": "1.18.15",
+    "summary": {
+      "additions": 0,
+      "deletions": 0,
+      "files": 0
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 5477,
+      "output": 208,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "time": {
+      "created": 1786321410115,
+      "updated": 1786321476064
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1786321410139
+        },
+        "agent": "auto",
+        "model": {
+          "providerID": "ollama",
+          "modelID": "gpt-oss:20b"
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_fe90d985b001eK1RzDPgE6Nill",
+        "sessionID": "ses_016f267bcffei5o9yCm4ci76aT"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "Найди в интернете актуальную версию Go и напиши мне",
+          "id": "prt_fe90d985d001OHOUN0rfXO4qqD",
+          "sessionID": "ses_016f267bcffei5o9yCm4ci76aT",
+          "messageID": "msg_fe90d985b001eK1RzDPgE6Nill"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_fe90d985b001eK1RzDPgE6Nill",
+        "role": "assistant",
+        "mode": "auto",
+        "agent": "auto",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 5685,
+          "input": 5477,
+          "output": 208,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "gpt-oss:20b",
+        "providerID": "ollama",
+        "time": {
+          "created": 1786321410152,
+          "completed": 1786321476050
+        },
+        "finish": "tool-calls",
+        "id": "msg_fe90d9868001WG0Y6ZTqVPZ0Em",
+        "sessionID": "ses_016f267bcffei5o9yCm4ci76aT"
+      },
+      "parts": [
+        {
+          "type": "step-start",
+          "id": "prt_fe90e382a001msWvpLq36qFpKt",
+          "sessionID": "ses_016f267bcffei5o9yCm4ci76aT",
+          "messageID": "msg_fe90d9868001WG0Y6ZTqVPZ0Em"
+        },
+        {
+          "type": "reasoning",
+          "text": "The user asks: \"Найди в интернете актуальную версию Go и напиши мне\" which means: \"Find the current latest version of Go on internet and write it to me.\" We are not allowed to contact Internet? The environment likely doesn't have external internet. But we can use webfetch tool. There's a tool 'webfetch' that fetches content from specified URL. Can fetch https://go.dev/dl/, etc. Use that.\n\nThe user just wants the latest stable Go version. Let's use webfetch to get go download page.\n\nLet's call webfetch with url \"https://go.dev/doc/install\" maybe but easier: https://go.dev/dl/ lists all downloads with tags. It shows <strong>. But we can parse. Let's just fetch and see output.\n\nWe need to provide the answer in Russian.\n\nWe use webfetch tool:\n\n",
+          "time": {
+            "start": 1786321451074,
+            "end": 1786321460802
+          },
+          "id": "prt_fe90e38420016oSehoKlRMsP3r",
+          "sessionID": "ses_016f267bcffei5o9yCm4ci76aT",
+          "messageID": "msg_fe90d9868001WG0Y6ZTqVPZ0Em"
+        },
+        {
+          "type": "tool",
+          "tool": "webfetch",
+          "callID": "call_ovz87u2d",
+          "state": {
+            "status": "error",
+            "input": {
+              "url": "https://go.dev/dl",
+              "format": "text"
+            },
+            "error": "The user rejected permission to use this specific tool call.",
+            "time": {
+              "start": 1786321460844,
+              "end": 1786321476020
+            }
+          },
+          "id": "prt_fe90e5e53001MeHzPAWrPc3MC6",
+          "sessionID": "ses_016f267bcffei5o9yCm4ci76aT",
+          "messageID": "msg_fe90d9868001WG0Y6ZTqVPZ0Em"
+        },
+        {
+          "reason": "tool-calls",
+          "type": "step-finish",
+          "tokens": {
+            "total": 5685,
+            "input": 5477,
+            "output": 208,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_fe90e99c2001gXP6vBxxqSVnvM",
+          "sessionID": "ses_016f267bcffei5o9yCm4ci76aT",
+          "messageID": "msg_fe90d9868001WG0Y6ZTqVPZ0Em"
+        }
+      ]
+    }
+  ]
+}

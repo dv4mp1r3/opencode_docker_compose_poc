@@ -1,0 +1,43 @@
+timestamp=2026-08-09T23:34:06.593Z level=INFO run=8d268906 message="creating instance" directory=/workspace
+timestamp=2026-08-09T23:34:06.598Z level=INFO run=8d268906 message=fromDirectory directory=/workspace
+timestamp=2026-08-09T23:34:06.616Z level=INFO run=8d268906 message=bootstrapping directory=/workspace
+timestamp=2026-08-09T23:34:06.632Z level=INFO run=8d268906 message=loading path=/home/node/.config/opencode/config.json
+timestamp=2026-08-09T23:34:06.633Z level=INFO run=8d268906 message=loading path=/home/node/.config/opencode/opencode.json
+timestamp=2026-08-09T23:34:06.636Z level=INFO run=8d268906 message=loading path=/home/node/.config/opencode/opencode.jsonc
+timestamp=2026-08-09T23:34:06.713Z level=INFO run=8d268906 message="all LSPs are disabled"
+timestamp=2026-08-09T23:34:06.714Z level=INFO run=8d268906 message="all formatters are disabled"
+timestamp=2026-08-09T23:34:06.714Z level=INFO run=8d268906 message=init
+timestamp=2026-08-09T23:34:06.885Z level=INFO run=8d268906 message=created id=ses_0171f9edaffeL3SnT38mnjONV1 slug=kind-mountain version=1.18.15 projectID=global directory=/workspace path=workspace workspaceID=undefined parentID=undefined title="New session - 2026-08-09T23:34:06.885Z" agent=undefined model=undefined metadata=undefined permission="[{\"permission\":\"question\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_enter\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_exit\",\"pattern\":\"*\",\"action\":\"deny\"}]" cost=0 tokens.input=0 tokens.output=0 tokens.reasoning=0 tokens.cache.read=0 tokens.cache.write=0 time.created=1786318446885 time.updated=1786318446885
+timestamp=2026-08-09T23:34:06.925Z level=INFO run=8d268906 message="event connected"
+timestamp=2026-08-09T23:34:07.273Z level=INFO run=8d268906 message=loop session.id=ses_0171f9edaffeL3SnT38mnjONV1 step=0
+timestamp=2026-08-09T23:34:07.281Z level=INFO run=8d268906 message="shell tool using shell" shell=/usr/bin/bash
+timestamp=2026-08-09T23:34:07.288Z level=INFO run=8d268906 message=init count=1
+[0m
+> auto · gpt-oss:20b
+[0m
+timestamp=2026-08-09T23:34:07.304Z level=INFO run=8d268906 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_0171f9edaffeL3SnT38mnjONV1 small=true agent=title mode=primary
+timestamp=2026-08-09T23:34:07.316Z level=INFO run=8d268906 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-09T23:34:07.414Z level=INFO run=8d268906 message="watcher backend" directory=/workspace platform=linux backend=inotify
+timestamp=2026-08-09T23:34:07.423Z level=INFO run=8d268906 message="project copy refresh started" projectID=global
+timestamp=2026-08-09T23:34:07.428Z level=INFO run=8d268906 message="project copy refresh done" projectID=global updated=[] removed=[]
+timestamp=2026-08-09T23:34:07.483Z level=INFO run=8d268906 message="booting location services" directory=/workspace workspaceID=undefined
+timestamp=2026-08-09T23:34:07.836Z level=INFO run=8d268906 message=process session.id=ses_0171f9edaffeL3SnT38mnjONV1 messageID=msg_fe8e062ab001hE7JulPQy6S9Eo
+timestamp=2026-08-09T23:34:07.850Z level=INFO run=8d268906 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_0171f9edaffeL3SnT38mnjONV1 small=false agent=auto mode=primary
+timestamp=2026-08-09T23:34:07.857Z level=INFO run=8d268906 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-09T23:34:17.768Z level=ERROR run=8d268906 message="Failed to fetch models.dev" cause="Cause([Fail(HttpClientError: Transport error (GET https://models.opencode.ai/api.json) (cause: Error: Unable to connect. Is the computer able to access the url?))])"
+timestamp=2026-08-09T23:34:29.687Z level=INFO run=8d268906 message=evaluated permission=glob pattern=httplib action.permission=glob action.action=allow action.pattern=*
+timestamp=2026-08-09T23:34:29.759Z level=INFO run=8d268906 message=loop session.id=ses_0171f9edaffeL3SnT38mnjONV1 step=1
+[0m✱ [0mGlob "httplib"[90m 0 matches[0m
+timestamp=2026-08-09T23:34:29.791Z level=INFO run=8d268906 message=process session.id=ses_0171f9edaffeL3SnT38mnjONV1 messageID=msg_fe8e0ba81001YHCzz572d27UB6
+timestamp=2026-08-09T23:34:29.792Z level=INFO run=8d268906 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_0171f9edaffeL3SnT38mnjONV1 small=false agent=auto mode=primary
+timestamp=2026-08-09T23:34:29.793Z level=INFO run=8d268906 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-09T23:34:32.380Z level=INFO run=8d268906 message=evaluated permission=glob pattern=*.* action.permission=glob action.action=allow action.pattern=*
+timestamp=2026-08-09T23:34:32.407Z level=INFO run=8d268906 message=evaluated permission=external_directory pattern=/* action.permission=external_directory action.action=ask action.pattern=*
+timestamp=2026-08-09T23:34:32.410Z level=INFO run=8d268906 message=asking id=per_fe8e0c4da001RX8K9ROJ8zOf33 permission=external_directory patterns="[\"/*\"]"
+[93m[1m! [0mpermission requested: external_directory (/*); auto-rejecting
+[0m✗ [0mGlob "*.*" failed[90m in /[0m
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
+timestamp=2026-08-09T23:34:32.467Z level=INFO run=8d268906 message="disposing instance" directory=/workspace
+real 26.80
+user 0.01
+sys 0.02

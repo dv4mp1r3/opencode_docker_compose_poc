@@ -1,0 +1,3 @@
+We have a minimal C++ header providing an HTTP server class. There's no example code. But the user wants to "Добавь чтение query-параметра name из /hello?name=Ivan и подставить его в ответ, не меняя httplib.h". So we need to modify some other file that uses this library. Need to identify where the server is created.
+
+Search for example usage of httplib.

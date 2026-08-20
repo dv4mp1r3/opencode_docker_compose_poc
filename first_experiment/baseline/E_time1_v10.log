@@ -1,0 +1,87 @@
+timestamp=2026-08-10T15:23:01.954Z level=INFO run=cc384a63 message="creating instance" directory=/workspace
+timestamp=2026-08-10T15:23:01.955Z level=INFO run=cc384a63 message=fromDirectory directory=/workspace
+timestamp=2026-08-10T15:23:01.966Z level=INFO run=cc384a63 message=bootstrapping directory=/workspace
+timestamp=2026-08-10T15:23:01.979Z level=INFO run=cc384a63 message=loading path=/home/node/.config/opencode/config.json
+timestamp=2026-08-10T15:23:01.982Z level=INFO run=cc384a63 message=loading path=/home/node/.config/opencode/opencode.json
+timestamp=2026-08-10T15:23:01.982Z level=INFO run=cc384a63 message=loading path=/home/node/.config/opencode/opencode.jsonc
+timestamp=2026-08-10T15:23:02.032Z level=INFO run=cc384a63 message="all LSPs are disabled"
+timestamp=2026-08-10T15:23:02.033Z level=INFO run=cc384a63 message="all formatters are disabled"
+timestamp=2026-08-10T15:23:02.033Z level=INFO run=cc384a63 message=init
+timestamp=2026-08-10T15:23:02.116Z level=INFO run=cc384a63 message=created id=ses_013badb9bffeSauDMqhKkgzVxb slug=curious-nebula version=1.18.15 projectID=global directory=/workspace path=workspace workspaceID=undefined parentID=undefined title="New session - 2026-08-10T15:23:02.116Z" agent=undefined model=undefined metadata=undefined permission="[{\"permission\":\"question\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_enter\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"plan_exit\",\"pattern\":\"*\",\"action\":\"deny\"}]" cost=0 tokens.input=0 tokens.output=0 tokens.reasoning=0 tokens.cache.read=0 tokens.cache.write=0 time.created=1786375382116 time.updated=1786375382116
+timestamp=2026-08-10T15:23:02.149Z level=INFO run=cc384a63 message="event connected"
+timestamp=2026-08-10T15:23:02.357Z level=INFO run=cc384a63 message=loop session.id=ses_013badb9bffeSauDMqhKkgzVxb step=0
+timestamp=2026-08-10T15:23:02.362Z level=INFO run=cc384a63 message="shell tool using shell" shell=/usr/bin/bash
+timestamp=2026-08-10T15:23:02.366Z level=INFO run=cc384a63 message=init count=1
+[0m
+> auto · gpt-oss:20b
+[0m
+timestamp=2026-08-10T15:23:02.379Z level=INFO run=cc384a63 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013badb9bffeSauDMqhKkgzVxb small=true agent=title mode=primary
+timestamp=2026-08-10T15:23:02.382Z level=INFO run=cc384a63 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T15:23:02.425Z level=INFO run=cc384a63 message="watcher backend" directory=/workspace platform=linux backend=inotify
+timestamp=2026-08-10T15:23:02.431Z level=INFO run=cc384a63 message="project copy refresh started" projectID=global
+timestamp=2026-08-10T15:23:02.432Z level=INFO run=cc384a63 message="project copy refresh done" projectID=global updated=[] removed=[]
+timestamp=2026-08-10T15:23:02.445Z level=INFO run=cc384a63 message="booting location services" directory=/workspace workspaceID=undefined
+timestamp=2026-08-10T15:23:02.588Z level=INFO run=cc384a63 message=process session.id=ses_013badb9bffeSauDMqhKkgzVxb messageID=msg_fec4525560011dMJtTQQuWJwdp
+timestamp=2026-08-10T15:23:02.594Z level=INFO run=cc384a63 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013badb9bffeSauDMqhKkgzVxb small=false agent=auto mode=primary
+timestamp=2026-08-10T15:23:02.595Z level=INFO run=cc384a63 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T15:23:02.759Z level=ERROR run=cc384a63 message="Failed to fetch models.dev" cause="Cause([Fail(HttpClientError: Transport error (GET https://models.opencode.ai/api.json) (cause: Error: Unable to connect. Is the computer able to access the url?))])"
+timestamp=2026-08-10T15:23:24.981Z level=INFO run=cc384a63 message=evaluated permission=glob pattern="Get(\"/hello\"" action.permission=glob action.action=allow action.pattern=*
+timestamp=2026-08-10T15:23:25.021Z level=INFO run=cc384a63 message=loop session.id=ses_013badb9bffeSauDMqhKkgzVxb step=1
+[0m✱ [0mGlob "Get("/hello""[90m 0 matches[0m
+timestamp=2026-08-10T15:23:25.037Z level=INFO run=cc384a63 message=process session.id=ses_013badb9bffeSauDMqhKkgzVxb messageID=msg_fec457dde001ktFEjo25TpkUYR
+timestamp=2026-08-10T15:23:25.038Z level=INFO run=cc384a63 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013badb9bffeSauDMqhKkgzVxb small=false agent=auto mode=primary
+timestamp=2026-08-10T15:23:25.039Z level=INFO run=cc384a63 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T15:23:32.258Z level=INFO run=cc384a63 message=evaluated permission=glob pattern="" action.permission=glob action.action=allow action.pattern=*
+timestamp=2026-08-10T15:23:32.284Z level=INFO run=cc384a63 message=loop session.id=ses_013badb9bffeSauDMqhKkgzVxb step=2
+[0m✱ [0mGlob ""[90m 100 matches[0m
+timestamp=2026-08-10T15:23:32.300Z level=INFO run=cc384a63 message=process session.id=ses_013badb9bffeSauDMqhKkgzVxb messageID=msg_fec459a3d0019rsYEmNnUi8BQQ
+timestamp=2026-08-10T15:23:32.301Z level=INFO run=cc384a63 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013badb9bffeSauDMqhKkgzVxb small=false agent=auto mode=primary
+timestamp=2026-08-10T15:23:32.302Z level=INFO run=cc384a63 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T15:23:40.798Z level=INFO run=cc384a63 message=loop session.id=ses_013badb9bffeSauDMqhKkgzVxb step=3
+[0m
+[0m✗ [0mInvalid Tool
+The arguments provided to the tool are invalid: Model tried to call unavailable tool 'search'. Available tools: bash, edit, glob, grep, invalid, read, skill, task, todowrite, webfetch, write.
+[0m
+timestamp=2026-08-10T15:23:40.811Z level=INFO run=cc384a63 message=process session.id=ses_013badb9bffeSauDMqhKkgzVxb messageID=msg_fec45bb80001sKTHPoNpaOanYM
+timestamp=2026-08-10T15:23:40.811Z level=INFO run=cc384a63 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013badb9bffeSauDMqhKkgzVxb small=false agent=auto mode=primary
+timestamp=2026-08-10T15:23:40.813Z level=INFO run=cc384a63 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T15:23:46.260Z level=INFO run=cc384a63 message=evaluated permission=glob pattern=http:// action.permission=glob action.action=allow action.pattern=*
+timestamp=2026-08-10T15:23:46.293Z level=INFO run=cc384a63 message=loop session.id=ses_013badb9bffeSauDMqhKkgzVxb step=4
+[0m✱ [0mGlob "http://"[90m 0 matches[0m
+timestamp=2026-08-10T15:23:46.309Z level=INFO run=cc384a63 message=process session.id=ses_013badb9bffeSauDMqhKkgzVxb messageID=msg_fec45d0f7001oT09Y81nczJZJ9
+timestamp=2026-08-10T15:23:46.310Z level=INFO run=cc384a63 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013badb9bffeSauDMqhKkgzVxb small=false agent=auto mode=primary
+timestamp=2026-08-10T15:23:46.311Z level=INFO run=cc384a63 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T15:23:51.100Z level=INFO run=cc384a63 message=evaluated permission=glob pattern=Hello action.permission=glob action.action=allow action.pattern=*
+timestamp=2026-08-10T15:23:51.128Z level=INFO run=cc384a63 message=loop session.id=ses_013badb9bffeSauDMqhKkgzVxb step=5
+[0m✱ [0mGlob "Hello"[90m 0 matches[0m
+timestamp=2026-08-10T15:23:51.147Z level=INFO run=cc384a63 message=process session.id=ses_013badb9bffeSauDMqhKkgzVxb messageID=msg_fec45e3da001Q5a0CRsp86skkl
+timestamp=2026-08-10T15:23:51.148Z level=INFO run=cc384a63 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013badb9bffeSauDMqhKkgzVxb small=false agent=auto mode=primary
+timestamp=2026-08-10T15:23:51.149Z level=INFO run=cc384a63 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T15:23:54.069Z level=INFO run=cc384a63 message=evaluated permission=read pattern=workspace/httplib.h action.permission=read action.action=allow action.pattern=*
+timestamp=2026-08-10T15:23:54.085Z level=INFO run=cc384a63 message=loop session.id=ses_013badb9bffeSauDMqhKkgzVxb step=6
+timestamp=2026-08-10T15:23:54.089Z level=INFO run=cc384a63 message="touching file" file=/workspace/httplib.h
+[0m→ [0mRead httplib.h[90m [limit=200, offset=1][0m
+timestamp=2026-08-10T15:23:54.105Z level=INFO run=cc384a63 message=process session.id=ses_013badb9bffeSauDMqhKkgzVxb messageID=msg_fec45ef66001M2IEoMSF3we7sV
+timestamp=2026-08-10T15:23:54.106Z level=INFO run=cc384a63 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013badb9bffeSauDMqhKkgzVxb small=false agent=auto mode=primary
+timestamp=2026-08-10T15:23:54.106Z level=INFO run=cc384a63 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T15:24:07.054Z level=INFO run=cc384a63 message=loop session.id=ses_013badb9bffeSauDMqhKkgzVxb step=7
+[0m
+[0m✗ [0mInvalid Tool
+The arguments provided to the tool are invalid: Model tried to call unavailable tool 'search'. Available tools: bash, edit, glob, grep, invalid, read, skill, task, todowrite, webfetch, write.
+[0m
+timestamp=2026-08-10T15:24:07.065Z level=INFO run=cc384a63 message=process session.id=ses_013badb9bffeSauDMqhKkgzVxb messageID=msg_fec462210001Hh4Ecbcn51zzp4
+timestamp=2026-08-10T15:24:07.066Z level=INFO run=cc384a63 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013badb9bffeSauDMqhKkgzVxb small=false agent=auto mode=primary
+timestamp=2026-08-10T15:24:07.067Z level=INFO run=cc384a63 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T15:24:16.848Z level=INFO run=cc384a63 message=evaluated permission=read pattern=workspace/example.cpp action.permission=read action.action=allow action.pattern=*
+timestamp=2026-08-10T15:24:16.871Z level=INFO run=cc384a63 message=loop session.id=ses_013badb9bffeSauDMqhKkgzVxb step=8
+timestamp=2026-08-10T15:24:16.875Z level=INFO run=cc384a63 message="touching file" file=/workspace/example.cpp
+[0m→ [0mRead example.cpp[90m [limit=200, offset=1][0m
+timestamp=2026-08-10T15:24:16.890Z level=INFO run=cc384a63 message=process session.id=ses_013badb9bffeSauDMqhKkgzVxb messageID=msg_fec464868001qNenfL71IAI7pS
+timestamp=2026-08-10T15:24:16.891Z level=INFO run=cc384a63 message=stream providerID=ollama modelID=gpt-oss:20b session.id=ses_013badb9bffeSauDMqhKkgzVxb small=false agent=auto mode=primary
+timestamp=2026-08-10T15:24:16.892Z level=INFO run=cc384a63 message="llm runtime selected" llm.runtime=ai-sdk llm.provider=ollama llm.model=gpt-oss:20b
+timestamp=2026-08-10T15:24:46.876Z level=INFO run=cc384a63 message=loop session.id=ses_013badb9bffeSauDMqhKkgzVxb step=9
+timestamp=2026-08-10T15:24:46.878Z level=INFO run=cc384a63 message="exiting loop" session.id=ses_013badb9bffeSauDMqhKkgzVxb
+timestamp=2026-08-10T15:24:46.883Z level=INFO run=cc384a63 message="disposing instance" directory=/workspace
+real 105.44
+user 0.01
+sys 0.01

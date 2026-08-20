@@ -1,0 +1,56 @@
+We added pending_rename_from attribute.
+
+Need support RNFR/RNTO commands. Implement do_RNFR and do_RNTO. Manage state per connection: self.pending_rename_from set path or None.
+
+Implement logic:
+
+do_RNFR(arg): check logged_in? maybe ftp spec requires authenticated. Add if not logged_in send 530. Then resolve arg to absolute within root_dir. If exists file/dir? Should allow rename existing item, not just file. For rename, need source must exist and be under root.
+
+After path resolved: store pending_rename_from=abs_path; send reply REPLY_350 "File name okay, about to rename." but spec says 350 File exists, ready for destination. On error: if not found or outside root => SEND REPLY_550 maybe? Or 550 Requested action not taken; file unavailable.
+
+Also path may exist and is a file/dir; we set pending_rename_from=path. Then RNTO <newpath>: Only allowed if pending_rename_from not None. Then resolve new path argument to new absolute path; check it's within root, does not point outside or same? Also cannot rename into existing file/directory? Should allow overwrite? maybe but will use os.rename which fails if exists; we can just call os.replace (overwrites). Use os.path.exists. For atomic rename: os.renames for directories; os.rename for files; os.replace works.
+
+Implement error handling: If no RNFR before, send 503 Bad sequence of commands. On success send REPLY_250 "File renamed successfully.".
+
+Also need to check target not outside root. Ensure both paths are absolute within root_dir and relative path does not contain .. leading outside. Use _resolve_path but that returns None if tries go above root. For RNTO newpath, we must not reuse same path? maybe allow rename to same location: do nothing? We'll treat as success.
+
+Also we should clear pending_rename_from after RNTO or after error? After any RNTO command (success or failure), we should clear it, per spec? Usually state cleared after completion either fail or succ. Implement accordingly.
+
+We also need check if source is within root; _resolve_path works for arg relative to current_dir or absolute.
+
+Implement do_RNFR: call _resolve_path with arg; if None => send REPLY_550 . else set pending_rename_from to abs target; send "350 Requested file action pending." But reply code variable: REPLY_350 message currently "354 Opening data channel"; but no constant defined for 350 rename. We can use string literal.
+
+Actually REPLY_350 constant exists earlier? yes at line 36 defined REPLY_330 etc; check earlier we had REPLY_351 in script? Search.
+No constants for rename reply. We can use string "350 Requested file action pending.".
+
+Also success code is 250. We'll send f"250 File renamed successfully.\r\n".
+
+Check imports: no use of os.rename? we import os at top; yes.
+
+Implement methods.
+
+We should also maybe modify _resolve_path to allow absolute path argument for RNTO; but same function works.
+
+Add state variable pending_rename_from as earlier.
+
+Also ensure that when do_RNTO called with target path not inside root, return 550: Requested action not taken.
+
+After rename, clear self.pending_rename_from = None
+
+In case of error due to file existence? We can call os.rename and handle FileNotFound etc. Use try/except.
+
+We also need to check if pending_rename_from is a location; before renaming we might have to ensure source exists (already checked in RNFR). So safe.
+
+Edge: rename into itself may be allowed -> no-op but return 250.
+
+Implement.
+
+Also consider that we might move file or dir across directories. os.rename supports moving.
+
+Ok let's modify code adding methods after existing do_PASS etc before list maybe near earlier functions. I'll append at end of class before ThreadedFTPServer? We'll add new methods anywhere inside FTPHandler class. Use edit to replace lines after RNFR? We can't easily insert; we can just find a place to add, likely between other commands; choose after do_STOR or after other command definitions.
+
+Let's search for last method definition in the file: do_STOR at line 386-387; then class definition ends at line 389. So we will add methods before that.
+
+We need to edit file: find region near end to insert new code.
+
+We'll use edit tool with replaceAll false? We need to identify a unique string to insert after. We'll locate "def do_STOR" and insert new method below. Let's open lines around there.

@@ -1,0 +1,29 @@
+We saw do_LIST uses self.server.root_dir incorrectly instead of current_dir. The issue: LIST should list relative path to current_dir not root.
+
+Also maybe _format_list_entry path joins current_dir correct but entries from os.listdir(self.server.root_dir) always root. Should use os.listdir(self.current_dir). So bug location lines 371-380.
+
+Thus tasks: edit that function. Perhaps also check do_CWD ensures current_dir updated correctly; ok. Also ensure LIST uses data and send after open. But main fix: change reference. Let's craft plan:
+
+Plan: review other file modifications not needed.
+
+We'll need to edit ftp_server.py, at lines approx 371-380. Ensure correct indentation same. Provide replace text.
+
+Use edit tool replacing old block.
+
+But we must first read that block exactly with line numbers: let's display around there lines 368-381.
+**Исправлено**
+
+В методе `do_LIST` сервер всегда выводил содержимое корневого каталога, даже после смены директории командой `CWD`.  
+Проблема заключалась в том, что список файлов формировался через:
+
+```python
+entries = os.listdir(self.server.root_dir)
+```
+
+Заменено на использование текущей рабочей директории:
+
+```python
+entries = os.listdir(self.current_dir)
+```
+
+Теперь команда `LIST` верно отображает содержимое выбранной пользователем папки.

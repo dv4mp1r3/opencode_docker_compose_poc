@@ -1,0 +1,70 @@
+We need to add reading query parameter name from /hello?name=Ivan and put it into the response. Also not changing httplib.h.
+
+Our example.cpp currently only handles root path pattern "/". We can change handler at svr.Get("/", ...) to handle query param extraction maybe. But we can also add a separate route for "/hello". That would keep httplib.h unchanged. We'll modify main.c++: add another GET route "hello" and read req.path? Wait Request struct has only string path. It doesn't include query string. In example.cpp, they use req.path e.g., if request is "/hello?name=Ivan", then `path` will be that entire string? The implementation of httplib parses the path from the request line: it extracts `method >> path >> http_version`. The HTTP request path includes query part; yes path will include "/hello?name=Ivan". So we need to parse the query param. We'll create handler for path="/hello" but we also can accept with query string - but current router uses exact match on path. In httplib::Server, the Get registers a route for the path exactly matched in handlers_. The default logic: In listen, after receiving request, they split method etc., then find handler: `auto it = handlers_.find(path); if exists else default`. So to handle '/hello?name=Ivan', we'd need to set handler with key "/hello". But the incoming 'path' will include query string. Therefore the lookup fails. Instead we can use default_handler_ (i.e., root handler) which handles any unmatched path. Or we could parse manually: The current root handler uses req.path.substr(1); If path is like "/hello?name=Ivan", sub becomes "hello?name=Ivan". Then file exists check etc. So we'd be reading file 'hello?name=Ivan', not what we want.
+
+Instead, easier modify default_handler to check if path starts with "/hello"? We'll add code inside existing handler: inside the get handler for "/", we can inspect req.path to see if it starts with "/hello". Actually path variable is entire request path. So let's implement logic: In `svr.Get("/", [&](const httplib::Request& req, httplib::Response& res)` we currently attempt file/directory. Instead, we add case before that: check if req.path == "/hello" or startswith? But the path will include query string e.g., ' /hello?name= Ivan'. When request is GET /hello?name=Ivan HTTP/1.1. The method parse gets `path` as "/hello?name=Ivan". Right. So we can check if req.path.rfind("/hello", 0)==0 meaning startswith '/hello'. Then parse query string part after '?', get 'name' param. And return greeting.
+
+But the root handler logic will take care of file/directory for other paths. Need to integrate that: In handler, first detect if path == "/hello" + optional query? Use `if (req.path.rfind("/hello", 0) == 0)` then handle hello separately else proceed existing code. Implementation details: Extract query string portion: find '?', if found; parse everything after '?'. Since we will only look for name param, use simple parsing.
+
+We'll modify this handler file accordingly.
+
+Now implement changes via edit tool to example.cpp.
+
+We need plan for microtasks:
+
+- Update example.cpp in handler logic with hello detection and parsing.
+
+Let's generate patch.
+
+But must ensure compile okay. Note that res.set_content usage: we can set content appropriately "Hello, Ivan".
+
+Implement code like:
+
+svr.Get("/", [&](const httplib::Request& req, httplib::Response& res) {
+    // If request is for /hello with query param name
+    if (req.path.rfind("/hello", 0) == 0) {
+        const std::string prefix = "/hello";
+        std::string name = "Stranger"; // default
+        auto pos = req.path.find('?', prefix.size());
+        if (pos != std::string::npos && pos + 1 < req.path.size()) {
+            std::string query = req.path.substr(pos + 1);
+            // parse queries of form key=value&...
+            size_t namePos = query.find("name=");
+            if (namePos != std::string::npos) {
+                size_t valueStart = namePos + 5; // length of "name="
+                size_t ampersand = query.find('&', valueStart);
+                if (ampersand == std::string::npos)
+                    valueStart;
+                else
+...
+We can break. Instead use simple find: string after 'name='.
+
+Simpler: parse tokens separated by '&'. We'll iterate over pairs. Implementation: string q=query; size_t start=0; while(start<q.size()){
+    size_t end = q.find('&',start);
+    std::string pair = q.substr(start, end-start);
+    size_t eq = pair.find('=');
+    if(eq!=std::string::npos){
+        std::string k=pair.substr(0,eq);
+        std::string v=pair.substr(eq+1);
+        if(k=="name"){ name=v; break; }
+    }
+    start=end==std::string::npos?q.size():end+1;
+}
+
+Then set response: res.set_content("Hello, " + name , ...). res.status = 200;
+
+Return. And then proceed to normal else.
+
+If query string absent and path is '/hello', name default 'Stranger'.
+
+Ok.
+
+Edge case: For /hello (exact) path without '?' . In our check we treat that as startswith "/hello", parse. pos will be npos and query parsing yields none, name remains default.
+
+Add new code before existing file logic lines 29-30 etc.
+
+Make sure to return early after handling hello; else continue with rest.
+
+Implementation location: We'll modify lines around 25-28 where handler defined. Let's open relevant portion lines 21 to 35 maybe.
+
+Let's read again near start.
