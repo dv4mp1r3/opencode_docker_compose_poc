@@ -50,6 +50,7 @@ services:
     environment:
       OPENCODE_MODEL: ${OPENCODE_MODEL:-gpt-oss:20b}
       OLLAMA_HOST: ${OLLAMA_HOST:-ollama}
+      OPENCODE_EXPERIMENTAL_LSP_TOOL: "true"
       HTTP_PROXY: ${HTTP_PROXY:-}
       HTTPS_PROXY: ${HTTPS_PROXY:-}
       NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,host.docker.internal,ollama}

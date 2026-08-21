@@ -26,7 +26,7 @@
           "tools": true,
           "options": {
             "extraBody": {
-              "think": "high"
+              "think": "medium"
             }
           },
           "limit": {
@@ -61,9 +61,7 @@
     "edit": "allow",
     "glob": "allow",
     "grep": "allow",
-    "list": "allow",
     "lsp": "allow",
-    "todoread": "allow",
     "todowrite": "allow",
     "task": "allow",
     "skill": "allow",
@@ -118,9 +116,7 @@
         "read": "allow",
         "glob": "allow",
         "grep": "allow",
-        "list": "allow",
         "lsp": "allow",
-        "todoread": "allow",
         "todowrite": "allow",
         "task": "allow",
         "skill": "allow",
@@ -171,13 +167,11 @@
         "read": "allow",
         "glob": "allow",
         "grep": "allow",
-        "list": "allow",
         "lsp": "allow",
         "edit": "deny",
         "write": "deny",
         "bash": "deny",
         "task": "deny",
-        "todoread": "allow",
         "todowrite": "deny",
         "skill": "deny",
         "question": "deny",
