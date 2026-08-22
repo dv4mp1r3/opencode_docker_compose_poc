@@ -40,6 +40,30 @@
             "context": 32768,
             "output": 8192
           }
+        },
+        "qwen3:14b": {
+          "name": "qwen3:14b",
+          "tools": true,
+          "limit": {
+            "context": 32768,
+            "output": 8192
+          }
+        },
+        "devstral-small-2:24b": {
+          "name": "devstral-small-2:24b",
+          "tools": true,
+          "limit": {
+            "context": 32768,
+            "output": 8192
+          }
+        },
+        "qwen3-coder:30b": {
+          "name": "qwen3-coder:30b",
+          "tools": true,
+          "limit": {
+            "context": 32768,
+            "output": 8192
+          }
         }
       }
     }
@@ -138,6 +162,70 @@
           "pkill *": "allow",
           "kill *": "allow",
           "curl *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "grep *": "allow",
+          "wc *": "allow",
+          "sort *": "allow",
+          "opencode *": "allow",
+          "true": "allow",
+          "false": "allow",
+          "./*": "allow",
+          "type *": "allow",
+          "where *": "allow",
+          "dir *": "allow",
+          "echo *": "allow",
+          "cat *": "allow",
+          "ls *": "allow",
+          "pwd": "allow",
+          "cd *": "allow"
+        },
+        "webfetch": "ask",
+        "websearch": "ask",
+        "memory_list": "allow",
+        "memory_set": "allow",
+        "memory_replace": "allow",
+        "doom_loop": "ask",
+        "external_directory": "allow"
+      }
+    },
+    "bare": {
+      "mode": "primary",
+      "permission": {
+        "edit": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "lsp": "allow",
+        "todowrite": "allow",
+        "task": "allow",
+        "skill": "allow",
+        "question": "allow",
+        "bash": {
+          "*": "ask",
+          "git *": "ask",
+          "npm *": "allow",
+          "bun *": "allow",
+          "node *": "allow",
+          "tsc *": "allow",
+          "npx *": "allow",
+          "go *": "allow",
+          "g++ *": "allow",
+          "make *": "allow",
+          "python3 *": "allow",
+          "python *": "allow",
+          "sleep *": "allow",
+          "pkill *": "allow",
+          "kill *": "allow",
+          "curl *": "allow",
+          "find *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "grep *": "allow",
+          "wc *": "allow",
+          "sort *": "allow",
+          "opencode *": "allow",
           "true": "allow",
           "false": "allow",
           "./*": "allow",
