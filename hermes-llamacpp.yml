@@ -56,9 +56,37 @@ services:
       LLAMA_ARG_FLASH_ATTN: auto
       # Токен HF, если модель приватная/лимитируется — обычно не нужен для публичных GGUF.
       HF_TOKEN: ${HF_TOKEN:-}
+      # НАЙДЕНО НА ЖИВОМ ПРОГОНЕ (2026-09-09, внешний GPU-хост): докачка GGUF падала на
+      # TLS-хендшейке конкретно к CDN-редиректу HF (us.aws.cdn.hf.co/CloudFront,
+      # `curl: (35) TLS connect error`), хотя сам huggingface.co отвечал нормально —
+      # похоже на обрыв мидлбоксом на конкретном CDN-пути, не на общую недоступность HF.
+      # Подтверждено прямо в исходнике (common/common.cpp:1552-1564,
+      # ggml-org/llama.cpp@master, common_get_model_endpoint()) — даунлоадер уважает
+      # HF_ENDPOINT (или MODEL_ENDPOINT, у него приоритет) как базовый URL вместо
+      # захардкоженного https://huggingface.co/. Пусто по умолчанию — задать например
+      # https://hf-mirror.com/, если увидите ту же TLS-ошибку на докачке.
+      HF_ENDPOINT: ${HF_ENDPOINT:-}
+      # НАЙДЕНО НА ЖИВОМ ПРОГОНЕ (подтверждён обрыв на уровне провайдера): даунлоадер
+      # llama.cpp — голый libcurl без собственной прокси-логики (проверено по исходнику
+      # download.cpp/arg.cpp — там нет ни своего --proxy флага, ни ручного парсинга прокси-
+      # переменных), значит работает стандартное поведение curl — HTTP(S)_PROXY/ALL_PROXY
+      # подхватываются автоматически, включая SOCKS через схему socks5h:// (h — DNS тоже
+      # через прокси, не только IP-трафик; важно, если блочат и на уровне DNS/SNI).
+      # Пример: HTTPS_PROXY=socks5h://host.docker.internal:1080 — порт/адрес подставить
+      # свои (SOCKS-клиент — ssh -D, shadowsocks/v2ray и т.п.). host.docker.internal
+      # резолвится на Linux через extra_hosts ниже; сам SOCKS должен слушать не только на
+      # 127.0.0.1 хоста, а на 0.0.0.0 или интерфейсе docker-бриджа — иначе контейнер до
+      # него не достучится через host-gateway.
       HTTP_PROXY: ${HTTP_PROXY:-}
       HTTPS_PROXY: ${HTTPS_PROXY:-}
+      ALL_PROXY: ${ALL_PROXY:-}
       NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,host.docker.internal}
+    extra_hosts:
+      # На Docker Desktop (Mac/Win) host.docker.internal уже резолвится сам по себе —
+      # эта запись там просто безвредно-избыточна. На Linux (внешний GPU-хост) без неё
+      # host.docker.internal не резолвится вообще — а туда чаще всего смотрит локальный
+      # SOCKS/HTTP-прокси на хосте.
+      - "host.docker.internal:host-gateway"
     ports:
       - "${LLAMACPP_PORT:-8080}:8080"
     networks:
@@ -111,8 +139,24 @@ services:
       # "${LLAMACPP_MODEL}" как имя модели и падал в APIConnectionError.
       LLAMACPP_MODEL: ${LLAMACPP_MODEL:-Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M}
       LLAMACPP_CTX: ${LLAMACPP_CTX:-65536}
+      # Базовый URL, на который config.yaml (providers.local-llamacpp.api) шлёт запросы.
+      # Дефолт — имя сервиса в этой же docker-сети. Переопределить в .env на
+      # http://<host>:<port>/v1, если llama-server крутится не в этом compose (например,
+      # запущен напрямую на внешнем GPU-хосте без Docker).
+      LLAMACPP_BASE_URL: ${LLAMACPP_BASE_URL:-http://llama-cpp:8080/v1}
+      # НАЙДЕНО НА ЖИВОМ ПРОГОНЕ (эксперимент 4, golden-set): официальный docker-образ Hermes
+      # САМ выставляет HERMES_WRITE_SAFE_ROOT=/opt/data (подтверждено в security.md — "Set
+      # automatically in the official Docker image") — write_file/patch хард-блокируются за
+      # пределами этого корня, БЕЗ approval-промпта и без варианта обойти из чата. Рабочий
+      # каталог задачи — /workspace (working_dir ниже), он вне /opt/data, значит любая правка
+      # файла в /workspace была бы заблокирована независимо от того, правильно ли модель поняла
+      # задачу. Формат — несколько корней через ":" (Unix). Добавляем /workspace, СОХРАНЯЯ
+      # /opt/data (иначе, как предупреждает дока, Hermes не сможет писать cron/skills/своё же
+      # состояние).
+      HERMES_WRITE_SAFE_ROOT: /workspace:/opt/data
       HTTP_PROXY: ${HTTP_PROXY:-}
       HTTPS_PROXY: ${HTTPS_PROXY:-}
+      ALL_PROXY: ${ALL_PROXY:-}
       # НАЙДЕНО НА ЖИВОМ ПРОГОНЕ: если NO_PROXY уже задан в реальном .env (например,
       # унаследован от docker-compose.yml/opencode-стека), fallback-дефолт
       # ${NO_PROXY:-...,llama-cpp} НЕ применяется — переменная просто не пустая. Из-за этого
@@ -121,6 +165,12 @@ services:
       # ",llama-cpp" дописывается ПОСЛЕ подстановки/дефолта безусловно, а не через :- —
       # так исключение гарантированно есть независимо от того, что лежит в .env.
       NO_PROXY: "${NO_PROXY:-localhost,127.0.0.1,host.docker.internal},llama-cpp"
+    extra_hosts:
+      # См. комментарий у llama-cpp — на Linux без этого host.docker.internal не резолвится,
+      # а именно туда чаще всего смотрит локальный SOCKS/HTTP-прокси на хосте. Auxiliary-вызовы
+      # Hermes (tirith, генерация заголовков, облачные фолбэк-провайдеры, если сконфигурированы)
+      # так же упрутся в блокировку на уровне провайдера, что и докачка GGUF у llama-cpp.
+      - "host.docker.internal:host-gateway"
     networks:
       - hermes-net
     tty: true
