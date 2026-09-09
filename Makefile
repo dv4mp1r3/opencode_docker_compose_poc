@@ -1,80 +1,70 @@
-.PHONY: up up-gpu down logs pull list code shell check-proxy log help
+.PHONY: up up-gpu down logs pull models chat shell check-proxy help
 
-MODEL ?= qwen2.5-coder:7b
+# Makefile для эксперимента 4 (Hermes Agent + llama.cpp). Старый Makefile для
+# opencode+ollama переименован в Makefile.old — его цели работают через
+# `docker compose -f docker-compose.yml ...` напрямую, если понадобятся.
+
+MODEL ?= Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M
 
 PROXY_HOST ?= host.docker.internal
 PROXY_PORT ?= 8118
 
+COMPOSE := docker compose -f hermes-llamacpp.yml
+
 help:
-	@echo "Доступные команды:"
+	@echo "Доступные команды (Hermes Agent + llama.cpp):"
 	@echo "  make up          — запустить (CPU)"
-	@echo "  make up-gpu      — запустить с NVIDIA GPU (Linux)"
+	@echo "  make up-gpu      — запустить с NVIDIA GPU (Linux, требует hermes-llamacpp.gpu.yml)"
 	@echo "  make down        — остановить"
 	@echo "  make logs        — логи всех сервисов"
-	@echo "  make pull        — скачать модель (MODEL=name)"
-	@echo "  make list        — список скачанных моделей"
-	@echo "  make code        — открыть OpenCode в терминале"
-	@echo "  make shell       — shell внутри opencode контейнера"
-	@echo "  make check-proxy — проверить доступ к прокси из контейнера"
-	@echo "  make log list    — список сессий opencode"
-	@echo "  make log get ID  — выгрузить конкретную сессию opencode (JSON)"
+	@echo "  make pull        — поднять llama-cpp и прогреть докачку модели (MODEL=repo:quant)"
+	@echo "  make models      — список GGUF-файлов в кэше llama.cpp"
+	@echo "  make chat        — открыть Hermes в терминале (docker exec -it hermes hermes)"
+	@echo "  make shell       — shell внутри контейнера hermes"
+	@echo "  make check-proxy — проверить доступ к прокси из контейнера hermes"
+	@echo ""
+	@echo "config/hermes/config.yaml уже настроен на llama-cpp (см. config/hermes/README.md)."
+	@echo "Баг #18470 (temperature/parallel_tool_calls) всё ещё open — проверить логирующим"
+	@echo "прокси при первом реальном прогоне, обхода в конфиге нет."
 
 up:
 	@cp -n .env.example .env 2>/dev/null || true
-	docker compose up -d
+	$(COMPOSE) up -d
 	@echo ""
-	@echo "Ollama API: http://localhost:$$(grep OLLAMA_PORT .env | cut -d= -f2 || echo 11434)"
-	@echo "Запусти: make pull MODEL=$(MODEL)"
-	@echo "Затем:   make code"
+	@echo "llama.cpp API: http://localhost:$$(grep LLAMACPP_PORT .env 2>/dev/null | cut -d= -f2 || echo 8080)"
+	@echo "Конфиг Hermes: config/hermes/config.yaml (баг #18470 temperature/parallel_tool_calls всё ещё не закрыт — см. config/hermes/README.md)"
+	@echo "Затем: make chat"
 
 up-gpu:
 	@cp -n .env.example .env 2>/dev/null || true
-	docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+	docker compose -f hermes-llamacpp.yml -f hermes-llamacpp.gpu.yml up -d
 
 down:
-	docker compose down
+	$(COMPOSE) down
 
 logs:
-	docker compose logs -f
+	$(COMPOSE) logs -f
 
 pull:
-	@echo "Скачиваю модель: $(MODEL)"
-	docker compose exec ollama ollama pull $(MODEL)
+	@echo "Поднимаю llama-cpp, докачка модели $(MODEL) идёт при первом старте сервера"
+	LLAMACPP_MODEL="$(MODEL)" $(COMPOSE) up -d llama-cpp
+	@echo "Прогресс — в 'make logs' (llama-server пишет прогресс докачки в свой stdout)"
 
-list:
-	docker compose exec ollama ollama list
+models:
+	$(COMPOSE) exec llama-cpp find /models -maxdepth 4 -iname '*.gguf'
 
-code:
-	@if [ -z "$$(docker compose ps -q opencode --status running 2>/dev/null)" ]; then \
-		echo "Контейнер opencode не запущен — запускаю..."; \
-		docker compose up -d opencode; \
+chat:
+	@if [ -z "$$($(COMPOSE) ps -q hermes --status running 2>/dev/null)" ]; then \
+		echo "Контейнер hermes не запущен — запускаю..."; \
+		$(COMPOSE) up -d hermes; \
 	fi
-	docker compose exec -it opencode opencode
+	$(COMPOSE) exec -it hermes hermes
 
 shell:
-	docker compose exec -it opencode sh
+	$(COMPOSE) exec -it hermes sh
 
 check-proxy:
 	@echo "Проверяю доступ к прокси $(PROXY_HOST):$(PROXY_PORT) из контейнера..."
-	docker compose run --rm --entrypoint bash opencode -c \
-		'timeout 3 bash -c "cat /dev/null > /dev/tcp/$(PROXY_HOST)/$(PROXY_PORT)" \
+	$(COMPOSE) run --rm --entrypoint sh hermes -c \
+		'timeout 3 sh -c "cat /dev/null > /dev/tcp/$(PROXY_HOST)/$(PROXY_PORT)" \
 		&& echo "OK: прокси доступен" || echo "FAIL: прокси недоступен"'
-
-log:
-	@case "$(word 2,$(MAKECMDGOALS))" in \
-		list) docker compose exec -T -e PAGER=cat opencode opencode session list ;; \
-		get) \
-			if [ -z "$(word 3,$(MAKECMDGOALS))" ]; then \
-				echo "Использование: make log get <sessionID>"; \
-				exit 1; \
-			fi; \
-			docker compose exec -T -e PAGER=cat opencode opencode export $(word 3,$(MAKECMDGOALS)) ;; \
-		*) echo "Использование: make log list | make log get <sessionID>" ;; \
-	esac
-
-# Позволяет писать "make log list" / "make log get <id>" — без этого make
-# попытался бы собрать "list"/"get"/"<id>" как отдельные цели.
-ifeq (log,$(firstword $(MAKECMDGOALS)))
-  LOG_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-  $(eval $(LOG_ARGS):;@:)
-endif

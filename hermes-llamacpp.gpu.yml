@@ -1,0 +1,20 @@
+# Использование: docker compose -f hermes-llamacpp.yml -f hermes-llamacpp.gpu.yml up -d
+#
+# В отличие от docker-compose.gpu.yml (ollama) — у llama.cpp CPU и CUDA это два
+# РАЗНЫХ тега образа (server / server-cuda), не один и тот же образ + GPU-резервация.
+# Подтверждено: https://github.com/ggml-org/llama.cpp/blob/master/docs/docker.md
+services:
+  llama-cpp:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    environment:
+      # Сколько слоёв офлоадить на GPU (LLAMA_ARG_N_GPU_LAYERS) — env-переменные
+      # мержатся compose'ом по ключам поверх базового файла, поэтому здесь достаточно
+      # добавить только эту, не переопределяя весь блок environment целиком.
+      LLAMA_ARG_N_GPU_LAYERS: ${LLAMACPP_NGL:-99}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

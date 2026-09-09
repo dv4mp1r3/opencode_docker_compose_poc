@@ -1,0 +1,140 @@
+# Эксперимент 4 — Hermes Agent (Nous Research) поверх локального llama.cpp server.
+# Аналог docker-compose.yml (opencode+ollama), но отдельный стек: своя сеть/имя проекта,
+# чтобы оба compose-файла могли крутиться параллельно без коллизий.
+#
+# Использование:
+#   docker compose -f hermes-llamacpp.yml up -d                                   # CPU
+#   docker compose -f hermes-llamacpp.yml -f hermes-llamacpp.gpu.yml up -d        # NVIDIA GPU
+#
+# Источники, по которым сверялся (не по памяти/догадке — 2026-09-09):
+#   https://hermes-agent.nousresearch.com/docs/user-guide/docker
+#   https://hermes-agent.nousresearch.com/docs/integrations/providers
+#   https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md
+#   https://github.com/ggml-org/llama.cpp/blob/master/docs/docker.md
+#   реестр известных протокольных багов Hermes↔custom backend — см. память
+#   project_fourth_experiment_hermes_llamacpp_setup.
+#
+# config/hermes/config.yaml уже настроен на именованный custom-провайдер local-llamacpp
+# (http://llama-cpp:8080/v1) с воркэраундами известных багов — см. config/hermes/README.md.
+# Баг hermes-agent#18470 (temperature/parallel_tool_calls не прокидываются для custom-провайдеров)
+# всё ещё open и обхода в конфиге нет — проверять логирующим прокси при первом реальном прогоне.
+
+name: hermes_llamacpp
+
+services:
+  # Чинит права на volume с кэшем GGUF-моделей под UID/GID, под которым реально
+  # работает llama-server (образ по умолчанию root, мы принудительно понижаем —
+  # см. LLAMACPP_UID/LLAMACPP_GID ниже). Аналог ollama-init из docker-compose.yml.
+  llamacpp-init:
+    image: alpine
+    command: chown -R "${LLAMACPP_UID:-1000}:${LLAMACPP_GID:-1000}" /models
+    volumes:
+      - llamacpp-models:/models
+
+  llama-cpp:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: llama-cpp
+    user: "${LLAMACPP_UID:-1000}:${LLAMACPP_GID:-1000}"
+    volumes:
+      - llamacpp-models:/models
+    environment:
+      # LLAMA_CACHE — куда -hf докачивает GGUF при первом старте (конвенция
+      # llama.cpp, подтверждено по offic. README: env LLAMA_CACHE, дефолт
+      # ~/.cache/llama.cpp).
+      LLAMA_CACHE: /models
+      # HuggingFace repo:quant — авто-докачка через LLAMA_ARG_HF_REPO
+      # (эквивалент флага -hf). Дефолт — лёгкая модель для смок-теста на CPU/Mac,
+      # НЕ кандидат для содержательной оценки (см. README/model-picks для выбора
+      # реального кандидата под эксперимент).
+      LLAMA_ARG_HF_REPO: ${LLAMACPP_MODEL:-Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M}
+      LLAMA_ARG_CTX_SIZE: ${LLAMACPP_CTX:-65536}
+      LLAMA_ARG_HOST: 0.0.0.0
+      LLAMA_ARG_PORT: 8080
+      # Обязателен для tool calling (без него tool call приходит как сырой JSON-текст,
+      # не structured — см. function-calling.md).
+      LLAMA_ARG_JINJA: "true"
+      LLAMA_ARG_FLASH_ATTN: auto
+      # Токен HF, если модель приватная/лимитируется — обычно не нужен для публичных GGUF.
+      HF_TOKEN: ${HF_TOKEN:-}
+      HTTP_PROXY: ${HTTP_PROXY:-}
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+      NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,host.docker.internal}
+    ports:
+      - "${LLAMACPP_PORT:-8080}:8080"
+    networks:
+      - hermes-net
+    # У образа уже есть встроенный HEALTHCHECK (curl -f http://localhost:8080/health,
+    # интервал ~30с, ретраев по умолчанию — подтверждено по .devops/cpu.Dockerfile), но
+    # start_period у него не задан под первую докачку GGUF. НА ЖИВОМ ПРОГОНЕ (2026-09-09,
+    # смок-тест-модель ~4.5GB) контейнер уходил в "unhealthy" на несколько минут, пока шла
+    # докачка+загрузка весов — не фатально (Docker сам вернёт "healthy", как только /health
+    # начнёт отвечать, depends_on: condition: service_healthy это переживёт), но шумно и
+    # вводит в заблуждение при первом взгляде на `docker compose ps`. Переопределяем именно
+    # start_period, retries и timeout — сам тест (curl -f .../health) оставляем тем же, что
+    # в образе.
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 900s
+    restart: unless-stopped
+    depends_on:
+      llamacpp-init:
+        condition: service_completed_successfully
+
+  # Чинит права на смонтированный конфиг-каталог Hermes под фиксированный UID
+  # образа (10000 — задокументировано в docker-докe Hermes, не параметризуется
+  # так, как у opencode/ollama). Аналог ollama-init/llamacpp-init выше.
+  hermes-init:
+    image: alpine
+    command: chown -R "10000:10000" /opt/data
+    volumes:
+      - ./config/hermes:/opt/data
+
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes
+    # Весь изменяемый стейт Hermes (config.yaml, .env, profiles, skills, memories,
+    # sessions, logs) живёт в одном каталоге /opt/data — так задокументировано
+    # официально, поэтому монтируем каталог целиком (read-write), а не отдельные
+    # файлы read-only, как для opencode.
+    volumes:
+      - ./config/hermes:/opt/data
+      - ${WORKSPACE_PATH:-./workspace}:/workspace
+    working_dir: /workspace
+    environment:
+      # НАЙДЕНО НА ЖИВОМ ПРОГОНЕ (2026-09-09): config.yaml ссылается на ${LLAMACPP_MODEL}/
+      # ${LLAMACPP_CTX} — эта подстановка резолвится из окружения ПРОЦЕССА Hermes внутри
+      # контейнера (configuration.md, "Environment Variable Substitution"), не из compose.
+      # Без явной передачи сюда Hermes отправлял на llama-cpp буквальную строку
+      # "${LLAMACPP_MODEL}" как имя модели и падал в APIConnectionError.
+      LLAMACPP_MODEL: ${LLAMACPP_MODEL:-Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M}
+      LLAMACPP_CTX: ${LLAMACPP_CTX:-65536}
+      HTTP_PROXY: ${HTTP_PROXY:-}
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+      # НАЙДЕНО НА ЖИВОМ ПРОГОНЕ: если NO_PROXY уже задан в реальном .env (например,
+      # унаследован от docker-compose.yml/opencode-стека), fallback-дефолт
+      # ${NO_PROXY:-...,llama-cpp} НЕ применяется — переменная просто не пустая. Из-за этого
+      # весь трафик Hermes→llama-cpp пытался идти через HTTP_PROXY=<host-прокси>, а это
+      # 127.0.0.1 хоста, недоступный изнутри контейнера — сплошной Connection error.
+      # ",llama-cpp" дописывается ПОСЛЕ подстановки/дефолта безусловно, а не через :- —
+      # так исключение гарантированно есть независимо от того, что лежит в .env.
+      NO_PROXY: "${NO_PROXY:-localhost,127.0.0.1,host.docker.internal},llama-cpp"
+    networks:
+      - hermes-net
+    tty: true
+    stdin_open: true
+    restart: "no"
+    depends_on:
+      hermes-init:
+        condition: service_completed_successfully
+      llama-cpp:
+        condition: service_healthy
+
+networks:
+  hermes-net:
+    driver: bridge
+
+volumes:
+  llamacpp-models:
