@@ -1,4 +1,4 @@
-.PHONY: up up-gpu down logs pull models chat shell check-proxy help
+.PHONY: up up-gpu hermes down logs pull models chat shell check-proxy help
 
 # Makefile для эксперимента 4 (Hermes Agent + llama.cpp). Старый Makefile для
 # opencode+ollama переименован в Makefile.old — его цели работают через
@@ -13,8 +13,10 @@ COMPOSE := docker compose -f hermes-llamacpp.yml
 
 help:
 	@echo "Доступные команды (Hermes Agent + llama.cpp):"
-	@echo "  make up          — запустить (CPU)"
+	@echo "  make up          — запустить (CPU), включая локальный llama-cpp"
 	@echo "  make up-gpu      — запустить с NVIDIA GPU (Linux, требует hermes-llamacpp.gpu.yml)"
+	@echo "  make hermes      — только Hermes, БЕЗ локального llama-cpp (внешняя модель по"
+	@echo "                     LLAMACPP_BASE_URL из .env — например, bare-metal llama-server)"
 	@echo "  make down        — остановить"
 	@echo "  make logs        — логи всех сервисов"
 	@echo "  make pull        — поднять llama-cpp и прогреть докачку модели (MODEL=repo:quant)"
@@ -38,6 +40,16 @@ up:
 up-gpu:
 	@cp -n .env.example .env 2>/dev/null || true
 	docker compose -f hermes-llamacpp.yml -f hermes-llamacpp.gpu.yml up -d
+
+hermes:
+	@cp -n .env.example .env 2>/dev/null || true
+	@echo "Поднимаю только hermes, БЕЗ локального llama-cpp (--no-deps — depends_on:"
+	@echo "llama-cpp: condition: service_healthy иначе всё равно поднял бы локальный контейнер)."
+	$(COMPOSE) up hermes-init
+	$(COMPOSE) up -d --no-deps hermes
+	@echo ""
+	@echo "LLAMACPP_BASE_URL: $$(grep LLAMACPP_BASE_URL .env 2>/dev/null | cut -d= -f2- || echo 'http://llama-cpp:8080/v1 (дефолт — не задан в .env)')"
+	@echo "Затем: make chat"
 
 down:
 	$(COMPOSE) down
