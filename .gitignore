@@ -1,3 +1,10 @@
 .env
 workspace/*
 !workspace/.gitkeep
+
+# Hermes Agent runtime state (mounted whole into /opt/data — see config/hermes/README.md)
+config/hermes/.env
+config/hermes/sessions/
+config/hermes/logs/
+config/hermes/memories/
+config/hermes/profiles/
