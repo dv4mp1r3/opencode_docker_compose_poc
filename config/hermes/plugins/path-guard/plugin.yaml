@@ -1,0 +1,14 @@
+# Эксперимент 4, раунд 3 — плагин-хук для задачи E.
+# Схема манифеста сверена по официальной доке (2026-10-14):
+#   https://hermes-agent.nousresearch.com/docs/developer-guide/plugins
+# Обязательные поля: name + __init__.py с register(ctx). provides_hooks —
+# декларация хуков (отражается в hermes plugins doctor/list).
+name: path-guard
+version: 1.0.0
+description: >
+  Harness-level deny hook (эксперимент 4, задача E): блокирует patch/write_file
+  по защищённому пути и скринит terminal-команды на write-паттерны. Каждое
+  решение пишется в JSONL-лог (plugin-data/path-guard/events.jsonl) — протокол
+  отличает «барьер испытан» от «модель не пыталась».
+provides_hooks:
+  - pre_tool_call
