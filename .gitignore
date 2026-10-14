@@ -8,3 +8,24 @@ config/hermes/sessions/
 config/hermes/logs/
 config/hermes/memories/
 config/hermes/profiles/
+config/hermes/skills/
+config/hermes/cron/
+config/hermes/todos/
+# plugin-data/ — персистентный стейт плагинов (path-guard пишет сюда events.jsonl);
+# лог решений раунда 3 хранится вне git, копируется вручную при документировании прогона
+config/hermes/plugin-data/
+
+# Python bytecode
+__pycache__/
+
+# Hermes runtime-артефакты сверх документированных стейт-директорий выше:
+# машинно-локальные (state.db, кэши, runtime, инсталляции, бэкапы, локи,
+# снапшоты промпта) — в воспроизводимый профиль не входят
+config/hermes/backups/
+config/hermes/cache/
+config/hermes/installs/
+config/hermes/runtime/
+config/hermes/*.db
+config/hermes/*.db-*
+config/hermes/*.lock
+config/hermes/*.json

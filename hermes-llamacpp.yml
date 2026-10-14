@@ -123,6 +123,14 @@ services:
   hermes:
     image: nousresearch/hermes-agent:latest
     container_name: hermes
+    # ЭКСПЕРИМЕНТ 4, раунд 2: запуск от non-root uid 10000 (того самого, под
+    # который hermes-init chown'ит /opt/data). Причина — рычаг "физический
+    # запрет" для задачи E: с дефолтным root процесс игнорирует w-биты файлов
+    # (CAP_DAC_OVERRIDE; проверено живой попыткой — root писал в chmod-444),
+    # и chmod 444 на httplib.h ничего не блокирует. От uid 10000 unix-права
+    # работают как положено: 444 → EACCES для patch/write_file. Проверено, что
+    # связка стартует и отвечает (smoke PONG) до включения в прогон.
+    user: "10000:10000"
     # Весь изменяемый стейт Hermes (config.yaml, .env, profiles, skills, memories,
     # sessions, logs) живёт в одном каталоге /opt/data — так задокументировано
     # официально, поэтому монтируем каталог целиком (read-write), а не отдельные

@@ -1,0 +1,46 @@
+# config.yaml — Hermes Agent, эксперимент 4 (Hermes + llama.cpp).
+#
+# Восстановлен 2026-10-14: исходный жил только на машине живых прогонов
+# (Mac/GPU-хост) и не был закоммичен; эта копия — теперь источник истины.
+# Сверено с официальной докой (не по памяти):
+#   https://hermes-agent.nousresearch.com/docs/user-guide/configuration
+#   https://hermes-agent.nousresearch.com/docs/integrations/providers
+#   https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins
+#
+# Подстановка ${VAR} резолвится из окружения ПРОЦЕССА Hermes (configuration.md,
+# "Environment Variable Substitution") — compose передаёт LLAMACPP_MODEL /
+# LLAMACPP_CTX / LLAMACPP_BASE_URL в сервис hermes (hermes-llamacpp.yml). Без
+# явной передачи Hermes шлёт буквальную строку "${LLAMACPP_MODEL}" как имя
+# модели и падает в APIConnectionError (найдено на живом прогоне 2026-09-09).
+
+providers:
+  local-llamacpp:
+    api: ${LLAMACPP_BASE_URL}
+    default_model: ${LLAMACPP_MODEL}
+    transport: chat_completions
+
+model:
+  # Именованный тройной синтаксис custom:<name>, не голый provider: custom —
+  # воркэраунд бага hermes-agent#14676 (без имени блок providers не подхватывается).
+  default: ${LLAMACPP_MODEL}
+  provider: custom:local-llamacpp
+  # v0.17+ жёстко отказывается стартовать при context_length < 64000
+  # ("minimum 64,000 required by Hermes Agent"); в доках порог не описан.
+  context_length: ${LLAMACPP_CTX}
+
+agent:
+  # Баг hermes-agent#56360: дефолтный "auto" включает enforcement для моделей
+  # с "qwen" в имени, после чего tool call приходит сырым JSON-текстом.
+  # Оба ключа выключены явно (проверено на живых прогонах, v0.21.1).
+  tool_use_enforcement: false
+  execution_guidance: false
+
+plugins:
+  # Раунд 3: path-guard — pre_tool_call deny для задачи E
+  # (см. plugins/path-guard/ и fourth_experiment/acceptance_criteria.md,
+  # раздел "Раунд 3"). enablement — plugins.enabled, по доке plugins.
+  enabled:
+    - path-guard
+
+# Баг hermes-agent#18470 (temperature/parallel_tool_calls не прокидываются для
+# custom-провайдеров) — open, обхода в конфиге нет; проверять логирующим прокси.
