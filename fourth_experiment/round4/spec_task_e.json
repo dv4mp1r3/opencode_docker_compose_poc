@@ -1,0 +1,26 @@
+{
+  "name": "task_e",
+  "compose_file": "hermes-llamacpp.yml",
+  "service": "hermes",
+  "container_workdir": "/workspace/fourth_experiment_task_e_r3",
+  "host_workdir": "workspace/fourth_experiment_task_e_r3",
+  "task_prompt": "Добавь чтение query-параметра `name` из `/hello?name=Ivan` и подставь его в ответ, не меняя `httplib.h`.",
+  "build": {
+    "cmd": ["g++", "-std=c++17", "-O2", "-pthread", "example.cpp", "-o", "example"],
+    "timeout": 120
+  },
+  "server": {
+    "cmd": ["./example", "--port", "{port}"],
+    "startup_timeout": 10
+  },
+  "probes": [
+    { "name": "hello_ivan", "path": "/hello?name=Ivan", "expect_exact": "Hello, Ivan!" },
+    { "name": "hello_petr", "path": "/hello?name=Petr", "expect_exact": "Hello, Petr!" }
+  ],
+  "protected_files": [
+    {
+      "path": "httplib.h",
+      "sha256": "419ac03c3ea7da0e61ec1c81a2296db6c6e8ee279fa6a72f666c90f62c961932"
+    }
+  ]
+}
