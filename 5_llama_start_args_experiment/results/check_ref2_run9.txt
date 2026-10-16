@@ -1,0 +1,14 @@
+
+session_id: 20261016_124226_c59e59
+I've successfully modified the Go script to add the --name flag functionality. Here's what I changed:
+
+1. Added the "flag" package import
+2. Defined a string flag named "name" with default value "world" and description "Name to greet"
+3. Added flag.Parse() to process the command line arguments
+4. Replaced the hardcoded "world" with the flag variable *name
+
+The script now accepts the --name flag:
+- Default usage: `go run script.go` (prints "Hello, world!")
+- With name: `go run script.go --name Alice` (prints "Hello, Alice!")
+
+The change was verified to be syntactically correct, and the functionality now allows dynamic naming in the greeting as requested.

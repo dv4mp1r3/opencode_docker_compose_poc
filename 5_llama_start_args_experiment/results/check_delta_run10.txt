@@ -1,0 +1,14 @@
+I've successfully modified the Go script to add the `--name` flag functionality. Here's what I changed:
+
+1. Added the "flag" package import
+2. Created a string flag named "name" with default value "world" and description "Name to greet"
+3. Parsed the flags using flag.Parse()
+4. Used fmt.Printf to output the greeting with the name value
+
+The script now accepts a `--name` flag that can be used to customize the greeting. For example:
+- `go run script.go` will output "Hello, world!"
+- `go run script.go --name John` will output "Hello, John!"
+
+The implementation is verified and ready to use.
+
+session_id: 20261016_121805_47caee

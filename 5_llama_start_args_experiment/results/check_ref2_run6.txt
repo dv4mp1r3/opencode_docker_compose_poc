@@ -1,0 +1,14 @@
+
+session_id: 20261016_124025_3b480b
+I've successfully updated the script to include a `--name` flag. The changes:
+
+1. Added the "flag" package for command-line argument parsing
+2. Created a string flag named "name" with default value "world" and help text "Name to greet"
+3. Added flag.Parse() to process command-line arguments
+4. Used fmt.Printf to format the greeting with the name parameter
+
+The script now accepts a `--name` flag that defaults to "world" but can be overridden with a custom name. For example:
+- `go run script.go` prints "Hello, world!"
+- `go run script.go --name Alice` prints "Hello, Alice!"
+
+The implementation follows Go conventions and maintains backward compatibility with the original behavior.

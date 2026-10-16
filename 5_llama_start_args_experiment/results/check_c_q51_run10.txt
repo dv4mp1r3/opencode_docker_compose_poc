@@ -1,0 +1,21 @@
+I've updated the Go program to add a `--name` flag that defaults to "world". The changes:
+
+1. Added the "flag" package import
+2. Created a string flag named "name" with default value "world" and description "Name to greet"
+3. Called flag.Parse() to parse command line arguments
+4. Used fmt.Printf to format the greeting with the name value
+
+The program will now:
+- Print "Hello, world!" when run without arguments
+- Print "Hello, [name]!" when run with --name=[name] flag
+
+To test:
+```bash
+go run script.go
+# Output: Hello, world!
+
+go run script.go --name=John
+# Output: Hello, John!
+```
+
+session_id: 20261016_062831_d9e641
