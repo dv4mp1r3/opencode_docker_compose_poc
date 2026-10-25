@@ -1,0 +1,15 @@
+I've successfully updated all the Go files in the workspace to include the `--name` flag functionality with "world" as the default value. Here's what I changed:
+
+1. Modified `/workspace/exp5_check/script.go` to add flag support
+2. Modified `/workspace/script.go` to add flag support
+3. The file `/workspace/fourth_experiment_task_a/script.go` was already updated with the same functionality
+
+All files now:
+- Import the "flag" package
+- Define a flag named "name" with default value "world" and help text "Name to greet"
+- Parse flags using flag.Parse()
+- Format the greeting using fmt.Printf with the name parameter instead of the hardcoded "world"
+
+The implementation maintains backward compatibility since "world" is the default value when no flag is provided. The changes are minimal and focused only on adding the requested functionality.
+
+session_id: 20261016_131439_1d104d

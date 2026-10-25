@@ -1,0 +1,9 @@
+The script now supports a `--name` command-line argument with a default value of "world". The greeting dynamically uses the provided name or defaults to "world" if not specified. Verified with multiple test cases:
+
+1. Default behavior: `python main.py` → "Hello, world!"
+2. Custom name: `python main.py --name Alice` → "Hello, Alice!"
+3. Another custom name: `python main.py --name Bob` → "Hello, Bob!"
+
+The implementation is complete and working as requested.
+
+session_id: 20261025_171209_bdc5af

@@ -1,0 +1,14 @@
+
+session_id: 20261016_073944_9137b0
+I've updated the Go program to add the --name flag functionality. Here's what I changed:
+
+1. Added import statements for "flag" and "fmt" packages
+2. Created a string flag named "name" with default value "world" and description "Name to greet"
+3. Called flag.Parse() to parse the command line arguments
+4. Used fmt.Printf to format the greeting with the provided name (or default "world")
+
+The program now accepts the --name flag:
+- `go run script.go` will print "Hello, world!"
+- `go run script.go --name John` will print "Hello, John!"
+
+The change is complete and ready for use.

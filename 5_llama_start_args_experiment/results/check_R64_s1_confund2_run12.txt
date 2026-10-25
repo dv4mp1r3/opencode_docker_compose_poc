@@ -1,0 +1,14 @@
+
+session_id: 20261025_143345_688ed4
+I've updated the script.go file to add a `--name` flag that defaults to "world" for the greeting. 
+
+The change:
+1. Added flag package import for command-line flag parsing
+2. Created a string flag named "name" with default value "world" 
+3. Modified the print statement to use the flag value instead of hardcoded "world"
+
+The program will now:
+- Print "Hello, world!" when run without arguments
+- Print "Hello, [name]!" when run with --name flag (e.g., `go run script.go --name Alice`)
+
+This implements the requested feature where the name is configurable instead of hardcoded.

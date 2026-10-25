@@ -1,0 +1,15 @@
+I've implemented the requested feature by creating a Python script that accepts a `--name` flag to customize the greeting. 
+
+The changes made:
+1. Created a new Python script (`greeting.py`) that uses argparse to handle command-line arguments
+2. Added a `--name` flag with default value "world" 
+3. The script prints "Hello, [name]!" where [name] is either the default "world" or the value provided via the flag
+
+The implementation has been tested and works correctly:
+- Default behavior: `python3 greeting.py` outputs "Hello, world!"
+- Custom name: `python3 greeting.py --name="Alice"` outputs "Hello, Alice!"
+- Another custom name: `python3 greeting.py --name="Bob"` outputs "Hello, Bob!"
+
+The solution is simple, robust, and matches the requirements exactly.
+
+session_id: 20261025_162127_62b0f6

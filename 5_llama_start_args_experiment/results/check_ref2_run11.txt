@@ -1,0 +1,14 @@
+
+session_id: 20261016_124339_3a0b61
+I've updated the Go script to add a `--name` flag that replaces the hardcoded "world" in the greeting. The change:
+
+1. Added flag package import
+2. Added a string flag named "name" with default value "world" and description "name to greet"
+3. Added flag.Parse() call to process the flag
+4. Updated the greeting to use the flag value instead of hardcoded "world"
+
+The script now accepts a `--name` parameter that defaults to "world" but can be overridden with any value. For example:
+- `go run script.go` (uses default "world")
+- `go run script.go --name Alice` (uses "Alice")
+
+Note that Go is not installed in this environment, so I couldn't test the execution, but the code change is correct according to Go syntax and flag package usage. The patch successfully modified the file to implement the requested feature.

@@ -1,0 +1,15 @@
+
+session_id: 20261025_140649_9ccd2c
+I've updated the script to add a `--name` flag that allows customization of the greeting. The changes include:
+
+1. Added the "flag" package for command-line argument parsing
+2. Created a flag named "name" with default value "world" and description "Name to greet"
+3. Added flag.Parse() to parse the command-line arguments
+4. Updated the print statement to use the flag value instead of the hardcoded "world"
+
+The script now accepts the --name flag, defaulting to "world" if not specified. For example:
+- `./script` outputs "Hello, world!"
+- `./script --name Alice` outputs "Hello, Alice!"
+- `./script --name Bob` outputs "Hello, Bob!"
+
+The implementation is complete and ready for use.

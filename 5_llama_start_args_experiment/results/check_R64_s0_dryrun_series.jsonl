@@ -1,0 +1,1 @@
+{"ts": "2026-10-25T16:48:48", "point": "R64", "series": "s0", "run": "r1", "session_id": "20261025_134804_1a8432", "latency_s": 52, "verdict": "PASS", "go_default_ok": true, "go_name_ok": true, "cwd_changed": true, "root_changed": false, "extra_files": ""}

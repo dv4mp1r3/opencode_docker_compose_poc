@@ -111,26 +111,36 @@ services:
       llamacpp-init:
         condition: service_completed_successfully
 
-  # Чинит права на смонтированный конфиг-каталог Hermes под фиксированный UID
-  # образа (10000 — задокументировано в docker-докe Hermes, не параметризуется
-  # так, как у opencode/ollama). Аналог ollama-init/llamacpp-init выше.
+  # Прогрев прав на смонтированном конфиг-каталоге под HERMES_UID/GID.
+  # С 2026-10-16 основной механизм — штатный fix-attrs самого образа (env
+  # HERMES_UID/HERMES_GID у сервиса hermes: remap пользователя + chown /opt/data
+  # при загрузке; --user для этого не годится, entrypoint его отвергает). Этот
+  # one-shot остаётся как идемпотентный дубль до старта hermes и для порядка,
+  # если hermes запускается с --no-deps (цель `make hermes`).
+  # Аналог ollama-init/llamacpp-init выше.
   hermes-init:
     image: alpine
-    command: chown -R "10000:10000" /opt/data
+    command: chown -R "${HERMES_UID:-1000}:${HERMES_GID:-1000}" /opt/data
     volumes:
       - ./config/hermes:/opt/data
 
   hermes:
     image: nousresearch/hermes-agent:latest
     container_name: hermes
-    # ЭКСПЕРИМЕНТ 4, раунд 2: запуск от non-root uid 10000 (того самого, под
-    # который hermes-init chown'ит /opt/data). Причина — рычаг "физический
-    # запрет" для задачи E: с дефолтным root процесс игнорирует w-биты файлов
+    # ЭКСПЕРИМЕНТ 4, раунд 2: main-процесс Hermes должен быть non-root — рычаг
+    # "физический запрет" для задачи E: root игнорирует w-биты файлов
     # (CAP_DAC_OVERRIDE; проверено живой попыткой — root писал в chmod-444),
-    # и chmod 444 на httplib.h ничего не блокирует. От uid 10000 unix-права
-    # работают как положено: 444 → EACCES для patch/write_file. Проверено, что
-    # связка стартует и отвечает (smoke PONG) до включения в прогон.
-    user: "10000:10000"
+    # и chmod 444 на httplib.h ничего не блокирует. От ненулевого uid unix-права
+    # работают как положено: 444 → EACCES для patch/write_file.
+    #
+    # НЕ делать это через docker `user:`: entrypoint образа отвергает произвольные
+    # uid из --user (проверено живьём 2026-10-16: контейнер падает с
+    # "container started with --user 1000 (...) — not supported"). Штатный механизм
+    # образа — старт от root (дефолт, user: не задан) + env HERMES_UID/HERMES_GID
+    # ниже: при загрузке образ remap'ает пользователя hermes на эти UID/GID, сам
+    # chown'ит data volume и запускает сервисы под ними. Итог: файлы на хосте
+    # принадлежат хостовому пользователю (права чинить не надо), процесс non-root
+    # (chmod-барьер сохраняется).
     # Весь изменяемый стейт Hermes (config.yaml, .env, profiles, skills, memories,
     # sessions, logs) живёт в одном каталоге /opt/data — так задокументировано
     # официально, поэтому монтируем каталог целиком (read-write), а не отдельные
@@ -140,6 +150,13 @@ services:
       - ${WORKSPACE_PATH:-./workspace}:/workspace
     working_dir: /workspace
     environment:
+      # UID/GID, под которыми entrypoint образа запустит main-процесс Hermes
+      # (remap пользователя hermes + chown /opt/data при загрузке). Дефолт 1000 —
+      # типовой хостовый uid, чтобы файлы на хосте не приходилось чинить. НЕ 0:
+      # root игнорирует chmod-барьеры (см. комментарий выше). Алиасы PUID/PGID
+      # тоже поддерживаются образом (для NAS), здесь канонические имена.
+      HERMES_UID: ${HERMES_UID:-1000}
+      HERMES_GID: ${HERMES_GID:-1000}
       # НАЙДЕНО НА ЖИВОМ ПРОГОНЕ (2026-09-09): config.yaml ссылается на ${LLAMACPP_MODEL}/
       # ${LLAMACPP_CTX} — эта подстановка резолвится из окружения ПРОЦЕССА Hermes внутри
       # контейнера (configuration.md, "Environment Variable Substitution"), не из compose.

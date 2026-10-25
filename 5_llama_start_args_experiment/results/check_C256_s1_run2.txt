@@ -1,0 +1,8 @@
+
+session_id: 20261025_161919_fa375b
+Файл main.py был создан с возможностью передачи имени через флаг --name (по умолчанию "world"). При запуске без флага выводит "Hello, world!", при запуске с флагом --name выводит "Hello, <имя>!".
+
+Флаг --name работает корректно:
+- По умолчанию: python main.py → Hello, world!
+- С указанием имени: python main.py --name Alice → Hello, Alice!
+- С другим именем: python main.py --name Bob → Hello, Bob!

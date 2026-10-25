@@ -44,3 +44,4 @@ plugins:
 
 # Баг hermes-agent#18470 (temperature/parallel_tool_calls не прокидываются для
 # custom-провайдеров) — open, обхода в конфиге нет; проверять логирующим прокси.
+_config_version: 50

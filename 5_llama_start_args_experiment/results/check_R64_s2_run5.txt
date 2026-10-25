@@ -1,0 +1,15 @@
+
+session_id: 20261025_172539_e8ee1a
+I have successfully modified the greeting program to include a `--name` flag that replaces the hardcoded "world" in the greeting message.
+
+Changes made:
+1. Created a new Python script (main.py) that uses argparse to handle command-line arguments
+2. Added a `--name` flag with default value "world" 
+3. The program now prints "Hello, {name}!" where {name} is either the default "world" or the value provided by the user
+
+The solution has been tested and verified to work correctly:
+- Default behavior: `python3 main.py` outputs "Hello, world!"
+- With custom name: `python3 main.py --name Alice` outputs "Hello, Alice!"
+- With another custom name: `python3 main.py --name Bob` outputs "Hello, Bob!"
+
+The implementation follows Python best practices using argparse for command-line argument parsing and is ready for use.

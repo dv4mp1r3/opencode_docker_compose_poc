@@ -1,0 +1,17 @@
+I've successfully implemented the requested feature. The Python greeting program now includes a `--name` flag that:
+
+1. Defaults to "world" when not specified
+2. Accepts a custom name when provided via `--name` flag
+3. Replaces the hardcoded "world" in the greeting message
+
+The implementation:
+- Uses argparse for clean command-line argument parsing
+- Has a default value of "world" for the name parameter
+- Works with both default and custom names
+
+Verified with tests:
+- Default behavior: `python3 greeting.py` outputs "Hello, world!"
+- Custom name: `python3 greeting.py --name Alice` outputs "Hello, Alice!"
+- Custom name: `python3 greeting.py --name Bob` outputs "Hello, Bob!"
+
+session_id: 20261025_184024_a43f34

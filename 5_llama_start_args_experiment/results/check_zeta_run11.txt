@@ -1,0 +1,20 @@
+
+session_id: 20261016_082438_672e06
+Я добавил флаг --name с значением по умолчанию "world" в файл script.go. Теперь код выглядит так:
+
+```go
+package main
+
+import (
+	"flag"
+	"fmt"
+)
+
+func main() {
+	name := flag.String("name", "world", "Name to greet")
+	flag.Parse()
+	fmt.Printf("Hello, %s!\n", *name)
+}
+```
+
+Флаг --name теперь доступен и будет подставлять указанное имя в приветствие вместо захардкоженного "world". Если флаг не указан, будет использоваться значение по умолчанию "world".

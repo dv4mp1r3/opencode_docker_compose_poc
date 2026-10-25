@@ -1,0 +1,14 @@
+I've modified the Go script to add a `--name` flag that defaults to "world". The change:
+
+1. Added the "flag" and "fmt" packages
+2. Created a string flag named "name" with default value "world" and description "Name to greet"
+3. Added flag.Parse() to parse the command line arguments
+4. Used fmt.Printf to format the greeting with the provided name
+
+The script now accepts a --name flag:
+- `go run script.go` will output "Hello, world!"
+- `go run script.go --name=John` will output "Hello, John!"
+
+The file was successfully updated at /workspace/exp5_check/script.go. The Go tool isn't available in this environment, but the logic is correct and would work if Go were installed.
+
+session_id: 20261025_162650_da2305
