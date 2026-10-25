@@ -1,0 +1,13 @@
+I've successfully modified the program to add a `--name` flag that allows customizing the greeting. Here's what I did:
+
+1. Created a new Python script that uses argparse to handle command-line flags
+2. Added a `--name` argument with a default value of "world" 
+3. The program prints "Hello, {name}!" where {name} is either the default "world" or a custom name provided by the user
+
+The solution works as expected:
+- Default behavior: `python3 script.py` outputs "Hello, world!"
+- Custom name: `python3 script.py --name "Alice"` outputs "Hello, Alice!"
+
+The implementation is simple, robust, and follows Python best practices for command-line argument parsing.
+
+session_id: 20261025_135856_104fe4

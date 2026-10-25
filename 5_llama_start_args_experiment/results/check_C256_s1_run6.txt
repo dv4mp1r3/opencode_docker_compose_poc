@@ -1,0 +1,12 @@
+
+session_id: 20261025_162230_9d590d
+I've updated the Go script to add a `--name` flag that defaults to "world". The change:
+
+1. Added the "flag" package import
+2. Created a string flag named "name" with default value "world" and description "Name to greet"
+3. Added flag.Parse() to process the command line arguments
+4. Updated the print statement to use the flag value instead of the hardcoded "world"
+
+The script now accepts a --name flag that overrides the default greeting. For example:
+- `go run script.go` prints "Hello, world!"
+- `go run script.go --name Alice` prints "Hello, Alice!"

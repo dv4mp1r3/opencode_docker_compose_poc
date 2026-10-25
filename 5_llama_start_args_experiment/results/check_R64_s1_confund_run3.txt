@@ -1,0 +1,15 @@
+
+session_id: 20261025_140032_69b058
+I've updated the Go script to add a `--name` flag. The changes include:
+
+1. Added the "flag" package import
+2. Added a flag definition with default value "world"
+3. Added flag parsing
+4. Updated the print statement to use the flag value
+
+The script now accepts a `--name` argument that defaults to "world" if not specified, and will display "Hello, [name]!" where [name] is the value provided.
+
+To test:
+- `go run script.go` → "Hello, world!"
+- `go run script.go --name=John` → "Hello, John!"
+- `go run script.go -name=Jane` → "Hello, Jane!"

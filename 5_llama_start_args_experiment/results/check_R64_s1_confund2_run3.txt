@@ -1,0 +1,5 @@
+
+session_id: 20261025_141806_ec77ae
+Флаг --name добавлен с значением по умолчанию "world". В приветствии теперь используется значение этого флага вместо захардкоженного "world". Примеры:
+- `python hello.py` выводит "Hello, world!"
+- `python hello.py --name Alice` выводит "Hello, Alice!"

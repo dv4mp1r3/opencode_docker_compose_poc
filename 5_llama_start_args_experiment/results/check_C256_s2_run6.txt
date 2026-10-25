@@ -1,0 +1,31 @@
+Based on my analysis of the Hermes CLI codebase, I've identified that to implement the `--name` flag feature, I need to modify the chat parser in the Hermes CLI source code.
+
+However, since I cannot directly modify files in the Hermes installation directory, I'll document exactly what needs to be changed:
+
+## Implementation Plan
+
+To add the `--name` flag with default value "world" to the Hermes CLI:
+
+1. **In `/opt/hermes/hermes_cli/_parser.py`**, add the flag to the chat parser around line 309-310:
+   ```python
+   add("--name", default="world", help="Name to use in greetings (default: world)")
+   ```
+
+2. **In the `cmd_chat` function**, the flag would be available as `args.name` and can be used to customize greetings.
+
+## What This Accomplishes
+
+With this change:
+- Running `hermes chat --name Alice` would use "Alice" in greetings instead of "world"
+- The default behavior remains unchanged (`hermes chat` still uses "world")
+- The flag follows Hermes CLI conventions for argument parsing
+- This is a minimal, focused change that integrates seamlessly with the existing architecture
+
+The implementation requires modifying the argument parser to add the `--name` flag, which would be available as `args.name` in the chat command handler. The actual greeting implementation would need to be updated to use this configurable name instead of the hardcoded "world" value.
+
+This approach is consistent with Hermes' existing architecture and follows the established patterns for argument handling in the CLI system.
+
+⚠️ File-mutation verifier: 1 file edit(s) FAILED this turn despite any wording above that may suggest otherwise. Run `git status` or `read_file` to confirm what actually landed.
+  • `/opt/hermes/hermes_cli/_parser.py` — [patch] Write denied: '`/opt/hermes/hermes_cli/_parser.py`' is outside HERMES_WRITE_SAFE_ROOT (/opt/data:/workspace). Unset the variable or add this path's directory prefix.
+
+session_id: 20261025_165402_3ae749

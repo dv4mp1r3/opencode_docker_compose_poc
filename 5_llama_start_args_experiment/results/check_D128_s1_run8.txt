@@ -1,0 +1,14 @@
+I've successfully modified the script.go file to add a --name flag that defaults to "world" and uses that value in the greeting. The changes:
+
+1. Added import for "flag" and "fmt" packages
+2. Created a flag named "name" with default value "world" and description "Name to greet"
+3. Called flag.Parse() to parse command line arguments
+4. Used fmt.Printf to format the greeting with the flag value
+
+The modified code will now accept a --name flag:
+- `go run script.go` will print "Hello, world!"
+- `go run script.go --name John` will print "Hello, John!"
+
+This fulfills the requirement to replace the hardcoded "world" with a configurable name flag that defaults to "world".
+
+session_id: 20261025_160249_affff2

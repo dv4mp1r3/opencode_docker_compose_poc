@@ -1,0 +1,16 @@
+I've updated the greeting program to include a --name flag. Here's what I changed:
+
+1. Added the "flag" package import
+2. Added a flag.String() declaration for the name parameter with default value "world" and description "Name to greet"
+3. Added flag.Parse() to process command-line arguments
+4. Used fmt.Printf() to format the greeting message with the name variable
+
+The program now accepts a --name flag that defaults to "world" and can be overridden with a custom name:
+
+Example usage:
+- `go run script.go` (prints "Hello, world!")
+- `go run script.go --name Alice` (prints "Hello, Alice!")
+
+The change has been applied successfully to /workspace/exp5_check/script.go.
+
+session_id: 20261025_175902_9da8fa

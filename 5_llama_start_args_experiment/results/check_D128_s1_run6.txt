@@ -1,0 +1,11 @@
+
+session_id: 20261025_155029_9efe64
+I've added the `--name` flag to the Python script with a default value of "world". The script now:
+
+1. Parses command-line arguments using argparse
+2. Accepts a `--name` argument with default "world"
+3. Prints "Hello, {name}!" where {name} is either the provided argument or the default
+
+The script works correctly:
+- Default behavior: `python main.py` outputs "Hello, world!"
+- With argument: `python main.py --name Alice` outputs "Hello, Alice!"
